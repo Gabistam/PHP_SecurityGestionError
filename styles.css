@@ -217,11 +217,30 @@ body {
     padding: 25px;
     border: 2px solid;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
 }
 
 .security-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.security-card code {
+    word-break: break-word;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+}
+
+.security-card div[style*="monospace"] {
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+.security-card div[style*="monospace"] code {
+    display: block;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 /* Cartes spécifiques au thème sécurité */
@@ -264,6 +283,7 @@ body {
     border-radius: 12px;
     padding: 25px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    overflow: hidden;
 }
 
 .comparison-card h4 {
@@ -271,6 +291,24 @@ body {
     font-size: 1.3em;
     margin-bottom: 15px;
     text-align: center;
+}
+
+.comparison-card code {
+    word-break: break-word;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+}
+
+.comparison-card div[style*="monospace"] {
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+.comparison-card div[style*="monospace"] code {
+    display: block;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .workflow-steps {
@@ -312,6 +350,7 @@ body {
     border-radius: 12px;
     padding: 25px;
     margin: 20px 0;
+    overflow: hidden;
 }
 
 .best-practices ul {
@@ -332,6 +371,24 @@ body {
     color: #10b981;
     font-weight: bold;
     margin-right: 10px;
+}
+
+.best-practices code {
+    word-break: break-word;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+}
+
+.best-practices div[style*="monospace"] {
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+.best-practices div[style*="monospace"] code {
+    display: block;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .quiz-question {
@@ -474,6 +531,12 @@ code {
     border-radius: 4px;
     font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
     font-size: 0.9em;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    word-break: break-word;
+    display: inline-block;
+    max-width: 100%;
 }
 
 pre {
@@ -483,12 +546,18 @@ pre {
     padding: 15px;
     overflow-x: auto;
     margin: 15px 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 pre code {
     background: none;
     padding: 0;
     border-radius: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 /* Responsive Design */
