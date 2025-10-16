@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sécurité et Gestion d'Erreurs en PHP - Formation Développement</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="overflow-x-hidden">
+    <!-- Navigation fixe -->
+    <header>
+        <nav class="nav-fixed w-full">
+            <div class="nav-container max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between px-4 sm:px-6 lg:px-8 py-3 md:py-4 gap-3 md:gap-4">
+                <div class="nav-title text-center md:text-left text-sm sm:text-base">🔐 Sécurité PHP - Formation Développement</div>
+                <div class="nav-links flex flex-wrap justify-center md:justify-end gap-2 md:gap-4 text-sm">
+                    <a href="#intro">Introduction</a>
+                    <a href="#erreurs">Erreurs</a>
+                    <a href="#vulnerabilites">Vulnérabilités</a>
+                    <a href="#validation">Validation</a>
+                    <a href="#authentification">Auth</a>
+                    <a href="#bonnes-pratiques">Pratiques</a>
+                    <a href="#synthese">Synthèse</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 w-full">
+        <!-- Titre principal -->
+        <h1 class="hero-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl">🔐 Sécurité et Gestion d'Erreurs en PHP</h1>
+        <p class="hero-subtitle text-lg sm:text-xl md:text-2xl">Protégez vos applications web contre les vulnérabilités</p>
+
+        <!-- Section Introduction -->
+        <div id="intro" class="section py-6 md:py-8">
+            <h2 class="text-2xl sm:text-3xl md:text-4xl">🎯 Introduction : Pourquoi sécuriser vos applications PHP ?</h2>
+
+            <div class="intro-dropdown">
+                <div class="intro-header" onclick="toggleIntro(0)">
+                    💡 Comprendre l'importance de la sécurité en développement web
+                    <span class="intro-arrow">▼</span>
+                </div>
+                <div id="intro0" class="intro-content">
+                    <div class="intro-text">
+                        <p><strong>🎯 Objectif :</strong> Comprendre pourquoi la sécurité est cruciale dans le développement PHP et comment protéger vos applications contre les attaques courantes.</p>
+
+                        <h4>🔒 Qu'est-ce que la sécurité web ?</h4>
+                        <p>La sécurité web consiste à <strong>protéger votre application</strong> contre les attaques malveillantes :</p>
+                        <ul>
+                            <li><strong>Protéger les données</strong> : Informations personnelles, mots de passe, données bancaires</li>
+                            <li><strong>Préserver l'intégrité</strong> : Empêcher la modification non autorisée du contenu</li>
+                            <li><strong>Assurer la disponibilité</strong> : Éviter que l'application soit rendue inutilisable</li>
+                            <li><strong>Maintenir la confidentialité</strong> : Contrôler qui accède à quoi</li>
+                        </ul>
+
+                        <h4>⚠️ Les risques sans sécurité</h4>
+                        <ul>
+                            <li><strong>Vol de données</strong> : Piratage de comptes utilisateurs, fuite d'informations</li>
+                            <li><strong>Défacement</strong> : Modification du contenu de votre site</li>
+                            <li><strong>Injection de malware</strong> : Infection des visiteurs de votre site</li>
+                            <li><strong>Réputation ternie</strong> : Perte de confiance des utilisateurs</li>
+                            <li><strong>Sanctions légales</strong> : Amendes RGPD, poursuites judiciaires</li>
+                        </ul>
+
+                        <div class="intro-highlight">
+                            <strong>🎯 Analogie :</strong> La sécurité web, c'est comme la sécurité de votre maison : vous fermez à clé, vous vérifiez qui sonne avant d'ouvrir, et vous ne laissez pas traîner vos objets de valeur !
+                        </div>
+
+                        <h4>📊 Statistiques choc</h4>
+                        <ul>
+                            <li><strong>43% des cyberattaques</strong> visent les petites entreprises</li>
+                            <li><strong>Une attaque toutes les 39 secondes</strong> sur le web</li>
+                            <li><strong>90% des violations de données</strong> sont évitables avec de bonnes pratiques</li>
+                            <li><strong>PHP représente 77%</strong> des sites web - c'est une cible privilégiée !</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <div class="alert-icon">⚠️</div>
+                <div>
+                    <strong>Réalité du terrain :</strong> Un site non sécurisé peut être compromis en quelques minutes. Les robots malveillants scannent internet 24h/24 à la recherche de failles à exploiter !
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Gestion des erreurs -->
+        <div id="erreurs" class="section py-6 md:py-8">
+            <h2>⚡ Gestion des erreurs et exceptions en PHP</h2>
+
+            <div class="intro-dropdown">
+                <div class="intro-header" onclick="toggleIntro(1)">
+                    💡 Maîtriser le système d'exceptions PHP
+                    <span class="intro-arrow">▼</span>
+                </div>
+                <div id="intro1" class="intro-content">
+                    <div class="intro-text">
+                        <p><strong>🎯 Objectif :</strong> Apprendre à gérer proprement les erreurs avec try-catch et créer des exceptions personnalisées pour sécuriser vos applications.</p>
+
+                        <h4>⚡ Pourquoi bien gérer les erreurs ?</h4>
+                        <p>Une mauvaise gestion des erreurs peut révéler des <strong>informations sensibles</strong> :</p>
+                        <ul>
+                            <li><strong>Chemins de fichiers</strong> : Structure de votre serveur</li>
+                            <li><strong>Noms de base de données</strong> : Architecture technique</li>
+                            <li><strong>Requêtes SQL</strong> : Structure des tables</li>
+                            <li><strong>Versions logicielles</strong> : Vulnérabilités connues exploitables</li>
+                        </ul>
+
+                        <div class="intro-highlight">
+                            <strong>🎯 Principe de base :</strong> Pour l'utilisateur : message simple et rassurant. Pour le développeur : log détaillé avec toutes les informations techniques.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>🔧 Le système try-catch en PHP</h3>
+
+            <div class="security-cards">
+                <div class="security-card security-error">
+                    <div class="security-icon">⚡</div>
+                    <h3 style="color: #ef4444; margin-bottom: 15px;">Try-Catch Basique</h3>
+                    <p><strong>Structure :</strong> Capture et traite les exceptions</p>
+                    <br>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
+                        <code>try {<br>
+                        &nbsp;&nbsp;// Code risqué<br>
+                        &nbsp;&nbsp;$result = riskyFunction();<br>
+                        } catch (Exception $e) {<br>
+                        &nbsp;&nbsp;// Gestion de l'erreur<br>
+                        &nbsp;&nbsp;logError($e->getMessage());<br>
+                        &nbsp;&nbsp;showUserError("Erreur technique");<br>
+                        }</code>
+                    </div>
+                </div>
+
+                <div class="security-card security-auth">
+                    <div class="security-icon">🔒</div>
+                    <h3 style="color: #10b981; margin-bottom: 15px;">Exceptions Personnalisées</h3>
+                    <p><strong>Avantage :</strong> Gestion spécifique par type d'erreur</p>
+                    <br>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
+                        <code>class DatabaseException extends Exception {}<br>
+                        class ValidationException extends Exception {}<br><br>
+                        try {<br>
+                        &nbsp;&nbsp;validateUser($data);<br>
+                        } catch (ValidationException $e) {<br>
+                        &nbsp;&nbsp;// Erreur de validation<br>
+                        } catch (DatabaseException $e) {<br>
+                        &nbsp;&nbsp;// Erreur de base de données<br>
+                        }</code>
+                    </div>
+                </div>
+
+                <div class="security-card security-protection">
+                    <div class="security-icon">🛡️</div>
+                    <h3 style="color: #3b82f6; margin-bottom: 15px;">Logging Sécurisé</h3>
+                    <p><strong>Principe :</strong> Enregistrer sans exposer</p>
+                    <br>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
+                        <code>function logError($message) {<br>
+                        &nbsp;&nbsp;$logEntry = date('Y-m-d H:i:s') . <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;" - " . $message . PHP_EOL;<br>
+                        &nbsp;&nbsp;file_put_contents(<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;'/secure/logs/error.log',<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;$logEntry, FILE_APPEND<br>
+                        &nbsp;&nbsp;);<br>
+                        }</code>
+                    </div>
+                </div>
+
+                <div class="security-card security-vulnerability">
+                    <div class="security-icon">⚠️</div>
+                    <h3 style="color: #f59e0b; margin-bottom: 15px;">Gestion PDO</h3>
+                    <p><strong>Spécial :</strong> Erreurs de base de données</p>
+                    <br>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
+                        <code>try {<br>
+                        &nbsp;&nbsp;$pdo = new PDO($dsn, $user, $pass);<br>
+                        &nbsp;&nbsp;$pdo->setAttribute(PDO::ATTR_ERRMODE,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;PDO::ERRMODE_EXCEPTION);<br>
+                        } catch (PDOException $e) {<br>
+                        &nbsp;&nbsp;logError("DB Error: " . $e->getMessage());<br>
+                        &nbsp;&nbsp;die("Service temporairement indisponible");<br>
+                        }</code>
+                    </div>
+                </div>
+            </div>
+
+            <h3>🎯 Exemple concret : Site de paris sportifs</h3>
+            <div class="best-practices">
+                <p><strong>Scénario :</strong> Un utilisateur place un pari mais la base de données est inaccessible.</p>
+                <br>
+                <p><strong>❌ Mauvaise approche :</strong></p>
+                <div style="background: #fee; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                    <code>Fatal error: Cannot connect to database server mysql.internal.company.com on port 3306 using user 'bet_admin' with password 'SuperSecret123!'</code>
+                </div>
+                <p><strong>✅ Bonne approche :</strong></p>
+                <div style="background: #efe; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                    <p><em>Pour l'utilisateur :</em> "Service temporairement indisponible. Votre pari sera traité dans quelques instants."</p>
+                    <p><em>Dans les logs :</em> "[2025-01-15 14:30:15] DB Connection failed: mysql.internal.company.com:3306 - Access denied for user 'bet_admin'"</p>
+                </div>
+            </div>
+
+            <div class="alert alert-info">
+                <div class="alert-icon">💡</div>
+                <div>
+                    <strong>Astuce Pro :</strong> Configurez PHP en production avec <code>display_errors = Off</code> et <code>log_errors = On</code>. Ainsi, les erreurs sont enregistrées mais jamais affichées aux utilisateurs !
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz 1 -->
+        <div class="quiz-container">
+            <div class="quiz-header" onclick="toggleQuiz(1)">
+                <span>🎯 Quiz 1 : Introduction et Gestion d'erreurs</span>
+                <span class="quiz-arrow">▼</span>
+            </div>
+            <div id="quiz1" class="quiz-content">
+                <div class="quiz-question">
+                    <div class="question-text">1. Quel pourcentage des cyberattaques vise les petites entreprises ?</div>
+                    <div class="quiz-options" id="q1-1">
+                        <button class="quiz-option" data-correct="false">A) 15%</button>
+                        <button class="quiz-option" data-correct="true">B) 43%</button>
+                        <button class="quiz-option" data-correct="false">C) 78%</button>
+                    </div>
+                    <div class="quiz-feedback">
+                        <div class="feedback-text"></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="question-text">2. Vrai ou Faux : Il est sécurisé d'afficher les messages d'erreur PHP complets aux utilisateurs.</div>
+                    <div class="quiz-options" id="q1-2">
+                        <button class="quiz-option" data-correct="false">Vrai</button>
+                        <button class="quiz-option" data-correct="true">Faux - Cela révèle des informations sensibles</button>
+                    </div>
+                    <div class="quiz-feedback">
+                        <div class="feedback-text"></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="question-text">3. Que doit-on faire avec les erreurs en production ?</div>
+                    <div class="quiz-options" id="q1-3">
+                        <button class="quiz-option" data-correct="false">A) Les afficher à l'utilisateur pour qu'il comprenne</button>
+                        <button class="quiz-option" data-correct="true">B) Les logger en détail et afficher un message simple à l'utilisateur</button>
+                        <button class="quiz-option" data-correct="false">C) Les ignorer complètement</button>
+                    </div>
+                    <div class="quiz-feedback">
+                        <div class="feedback-text"></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="question-text">4. Quel attribut PDO permet de transformer les erreurs en exceptions ?</div>
+                    <div class="quiz-options" id="q1-4">
+                        <button class="quiz-option" data-correct="true">A) PDO::ATTR_ERRMODE avec PDO::ERRMODE_EXCEPTION</button>
+                        <button class="quiz-option" data-correct="false">B) PDO::ERROR_MODE avec PDO::THROW_EXCEPTION</button>
+                        <button class="quiz-option" data-correct="false">C) PDO::EXCEPTION_MODE avec PDO::AUTO_THROW</button>
+                    </div>
+                    <div class="quiz-feedback">
+                        <div class="feedback-text"></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="question-text">5. Pourquoi créer des exceptions personnalisées ?</div>
+                    <div class="quiz-options" id="q1-5">
+                        <button class="quiz-option" data-correct="false">A) Pour impressionner les autres développeurs</button>
+                        <button class="quiz-option" data-correct="true">B) Pour gérer différemment chaque type d'erreur</button>
+                        <button class="quiz-option" data-correct="false">C) Parce que c'est obligatoire en PHP</button>
+                    </div>
+                    <div class="quiz-feedback">
+                        <div class="feedback-text"></div>
+                    </div>
+                </div>
+
+                <div class="quiz-score">
+                    <h4>🎉 Résultat du Quiz 1</h4>
+                    <p class="score-text"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Vulnérabilités -->
+        <div id="vulnerabilites" class="section py-6 md:py-8">
+            <h2>⚠️ Vulnérabilités courantes des applications web</h2>
+
+            <div class="intro-dropdown">
+                <div class="intro-header" onclick="toggleIntro(2)">
+                    💡 Les 3 failles de sécurité les plus critiques
+                    <span class="intro-arrow">▼</span>
+                </div>
+                <div id="intro2" class="intro-content">
+                    <div class="intro-text">
+                        <p><strong>🎯 Objectif :</strong> Identifier et comprendre les vulnérabilités les plus courantes : injection SQL, XSS et CSRF.</p>
+
+                        <h4>📊 Le Top 3 OWASP</h4>
+                        <p>L'<strong>OWASP Top 10</strong> liste les vulnérabilités web les plus critiques. Voici le trio de tête :</p>
+                        <ul>
+                            <li><strong>Injection SQL</strong> : Manipulation des requêtes de base de données</li>
+                            <li><strong>XSS (Cross-Site Scripting)</strong> : Injection de code JavaScript malveillant</li>
+                            <li><strong>CSRF (Cross-Site Request Forgery)</strong> : Actions non autorisées au nom de l'utilisateur</li>
+                        </ul>
+
+                        <div class="intro-highlight">
+                            <strong>🎯 Statistique choc :</strong> Ces 3 vulnérabilités représentent à elles seules plus de 60% des attaques web réussies !
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>💉 Injection SQL : La reine des vulnérabilités</h3>
+
+            <div class="security-cards">
+                <div class="security-card security-vulnerability">
+                    <div class="security-icon">⚠️</div>
+                    <h3 style="color: #f59e0b;">Code Vulnérable</h3>
+                    <p><strong>❌ Dangereux :</strong> Concaténation directe</p>
+                    <br>
+                    <div style="background: #fef2f2; padding: 15px; border-radius: 8px; font-family: monospace; border-left: 4px solid #ef4444;">
+                        <code>$username = $_POST['username'];<br>
+                        $password = $_POST['password'];<br><br>
+                        $sql = "SELECT * FROM users WHERE <br>
+                        &nbsp;&nbsp;username = '$username' AND <br>
+                        &nbsp;&nbsp;password = '$password'";<br><br>
+                        $result = mysqli_query($conn, $sql);</code>
+                    </div>
+                    <p style="margin-top: 10px;"><strong>Attaque :</strong> <code>admin' OR '1'='1' --</code></p>
+                </div>
+
+                <div class="security-card security-protection">
+                    <div class="security-icon">🛡️</div>
+                    <h3 style="color: #3b82f6;">Code Sécurisé</h3>
+                    <p><strong>✅ Sûr :</strong> Requêtes préparées</p>
+                    <br>
+                    <div style="background: #f0f9ff; padding: 15px; border-radius: 8px; font-family: monospace; border-left: 4px solid #3b82f6;">
+                        <code>$username = $_POST['username'];<br>
+                        $password = $_POST['password'];<br><br>
+                        $sql = "SELECT * FROM users WHERE <br>
+                        &nbsp;&nbsp;username = ? AND password = ?";<br><br>
+                        $stmt = $pdo->prepare($sql);<br>
+                        $stmt->execute([$username, $password]);</code>
+                    </div>
+                    <p style="margin-top: 10px;"><strong>Protection :</strong> Paramètres séparés du code SQL</p>
+                </div>
+            </div>
+
+            <h3>🎭 XSS : Injection de JavaScript malveillant</h3>
+
+            <div class="comparison-grid">
+                <div class="comparison-card" style="border: 3px solid #ef4444;">
+                    <h4 style="color: #ef4444;">❌ Code Vulnérable</h4>
+                    <div style="background: #fef2f2; padding: 15px; border-radius: 8px; margin-top: 15px; font-family: monospace;">
+                        <code>// Affichage direct des données utilisateur<br>
+                        echo "Bonjour " . $_GET['nom'];</code>
+                    </div>
+                    <p style="margin-top: 15px;"><strong>Attaque possible :</strong></p>
+                    <code style="font-size: 0.8em;">?nom=&lt;script&gt;alert('XSS!')&lt;/script&gt;</code>
+                </div>
+
+                <div class="comparison-card" style="border: 3px solid #10b981;">
+                    <h4 style="color: #10b981;">✅ Code Sécurisé</h4>
+                    <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; margin-top: 15px; font-family: monospace;">
+                        <code>// Échappement des caractères spéciaux<br>
+                        echo "Bonjour " . htmlspecialchars($_GET['nom'], ENT_QUOTES, 'UTF-8');</code>
+                    </div>
+                    <p style="margin-top: 15px;"><strong>Résultat :</strong></p>
+                    <code style="font-size: 0.8em;">&lt;script&gt; devient &amp;lt;script&amp;gt;</code>
+                </div>
+            </div>
+
+            <h3>🔄 CSRF : Actions non autorisées</h3>
+
+            <div class="workflow-steps">
+                <div class="workflow-step" style="background: #ef4444;">
+                    <h4>1️⃣ Victime connectée</h4>
+                    <p>Sur votre site e-commerce</p>
+                </div>
+                <div class="workflow-step" style="background: #f59e0b;">
+                    <h4>2️⃣ Site malveillant</h4>
+                    <p>Formulaire caché</p>
+                </div>
+                <div class="workflow-step" style="background: #ef4444;">
+                    <h4>3️⃣ Action forcée</h4>
+                    <p>Achat non désiré</p>
+                </div>
+            </div>
+
+            <div class="best-practices">
+                <h4 style="margin-bottom: 15px;">🛡️ Protection CSRF avec Token :</h4>
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
+                    <code>// Génération du token<br>
+                    session_start();<br>
+                    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));<br><br>
+                    // Dans le formulaire<br>
+                    &lt;input type="hidden" name="csrf_token" <br>
+                    &nbsp;&nbsp;value="&lt;?= $_SESSION['csrf_token'] ?&gt;"&gt;<br><br>
+                    // Vérification<br>
+                    if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {<br>
+                    &nbsp;&nbsp;die('CSRF Attack detected!');<br>
+                    }</code>
+                </div>
+            </div>
+
+            <h3>🎮 Exemple gaming : Plateforme e-sport</h3>
+            <div class="alert alert-warning">
+                <div class="alert-icon">⚠️</div>
+                <div>
+                    <strong>Scénario d'attaque :</strong> Un pirate utilise une injection SQL pour voler la liste de tous les joueurs et leurs gains. Puis il utilise du XSS pour rediriger les visiteurs vers un faux site de paris. Enfin, il exploite une faille CSRF pour faire acheter des objets virtuels coûteux aux comptes connectés !
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Validation -->
+        <div id="validation" class="section py-6 md:py-8">
+            <h2>✅ Validation et filtrage des données</h2>
+
+            <div class="intro-dropdown">
+                <div class="intro-header" onclick="toggleIntro(3)">
+                    💡 Ne jamais faire confiance aux données utilisateur
+                    <span class="intro-arrow">▼</span>
+                </div>
+                <div id="intro3" class="intro-content">
+                    <div class="intro-text">
+                        <p><strong>🎯 Objectif :</strong> Apprendre à valider, filtrer et échapper toutes les données provenant des utilisateurs pour sécuriser votre application.</p>
+
+                        <h4>🔍 Principe fondamental</h4>
+                        <p><strong>Rule #1 :</strong> Ne JAMAIS faire confiance aux données utilisateur !</p>
+                        <ul>
+                            <li><strong>Tout provenant de $_GET, $_POST, $_COOKIE</strong> est suspect</li>
+                            <li><strong>Les données d'URL</strong> peuvent être modifiées</li>
+                            <li><strong>Les formulaires HTML</strong> peuvent être contournés</li>
+                            <li><strong>JavaScript côté client</strong> peut être désactivé/modifié</li>
+                        </ul>
+
+                        <div class="intro-highlight">
+                            <strong>🎯 Analogie :</strong> Traiter les données utilisateur comme un courrier suspect : on l'examine sous toutes les coutures avant de l'ouvrir !
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>🔍 Les étapes de la validation</h3>
+
+            <div class="workflow-steps">
+                <div class="workflow-step">
+                    <h4>1️⃣ Vérifier</h4>
+                    <p>Présence des données obligatoires</p>
+                </div>
+                <div class="workflow-step">
+                    <h4>2️⃣ Valider</h4>
+                    <p>Format et type corrects</p>
+                </div>
+                <div class="workflow-step">
+                    <h4>3️⃣ Filtrer</h4>
+                    <p>Nettoyer les données</p>
+                </div>
+                <div class="workflow-step">
+                    <h4>4️⃣ Échapper</h4>
+                    <p>Avant affichage/stockage</p>
+                </div>
+            </div>
+
+            <h3>🛠️ Outils de validation PHP</h3>
+
+            <div class="security-cards">
+                <div class="security-card security-protection">
+                    <div class="security-icon">🛡️</div>
+                    <h3 style="color: #3b82f6;">filter_var()</h3>
+                    <p><strong>Usage :</strong> Validation et filtrage intégrés</p>
+                    <br>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
+                        <code>// Valider un email<br>
+                        $email = filter_var($_POST['email'], <br>
+                        &nbsp;&nbsp;FILTER_VALIDATE_EMAIL);<br><br>
+                        // Valider un entier<br>
+                        $age = filter_var($_POST['age'], <br>
+                        &nbsp;&nbsp;FILTER_VALIDATE_INT, <br>
+                        &nbsp;&nbsp;array("options" => array(<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;"min_range" => 1,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;"max_range" => 120<br>
+                        &nbsp;&nbsp;)));</code>
+                    </div>
+                </div>
+
+                <div class="security-card security-error">
+                    <div class="security-icon">⚡</div>
+                    <h3 style="color: #ef4444;">Expressions régulières</h3>
+                    <p><strong>Usage :</strong> Validation de formats complexes</p>
+                    <br>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
+                        <code>// Valider un numéro de téléphone<br>
+                        $pattern = '/^[0-9]{10}$/';<br>
+                        if (preg_match($pattern, $phone)) {<br>
+                        &nbsp;&nbsp;// Téléphone valide<br>
+                        }<br><br>
+                        // Valider un nom d'utilisateur<br>
+                        $pattern = '/^[a-zA-Z0-9_]{3,20}$/';<br>
+                        if (preg_match($pattern, $username)) {<br>
+                        &nbsp;&nbsp;// Username valide<br>
+                        }</code>
+                    </div>
+                </div>
+
+                <div class="security-card security-auth">
+                    <div class="security-icon">🔒</div>
+                    <h3 style="color: #10b981;">Fonctions d'échappement</h3>
+                    <p><strong>Usage :</strong> Préparer pour affichage/stockage</p>
+                    <br>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
+                        <code>// Pour l'affichage HTML<br>
+                        echo htmlspecialchars($data, <br>
+                        &nbsp;&nbsp;ENT_QUOTES, 'UTF-8');<br><br>
+                        // Pour les URLs<br>
+                        echo urlencode($data);<br><br>
+                        // Pour JavaScript<br>
+                        echo json_encode($data);</code>
+                    </div>
+                </div>
+
+                <div class="security-card security-vulnerability">
+                    <div class="security-icon">⚠️</div>
+                    <h3 style="color: #f59e0b;">Whitelist vs Blacklist</h3>
+                    <p><strong>Principe :</strong> Privilégier la whitelist</p>
+                    <br>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
+                        <code>// ❌ Blacklist (dangereux)<br>
+                        if (strpos($input, '&lt;script&gt;') !== false) {<br>
+                        &nbsp;&nbsp;die('Interdit');<br>
+                        }<br><br>
+                        // ✅ Whitelist (sécurisé)<br>
+                        $allowed = ['admin', 'user', 'guest'];<br>
+                        if (!in_array($role, $allowed)) {<br>
+                        &nbsp;&nbsp;die('Rôle non autorisé');<br>
+                        }</code>
+                    </div>
+                </div>
+            </div>
+
+            <h3>🚗 Exemple automobile : Configurateur de voiture</h3>
+            <div class="comparison-grid" style="grid-template-columns: 1fr;">
+                <div class="comparison-card">
+                    <h4>📝 Validation complète d'un formulaire</h4>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 15px; font-family: monospace;">
+                        <code>function validateCarConfig($data) {<br>
+                        &nbsp;&nbsp;$errors = [];<br><br>
+                        &nbsp;&nbsp;// Modèle : whitelist<br>
+                        &nbsp;&nbsp;$allowedModels = ['308', 'C3', 'Clio'];<br>
+                        &nbsp;&nbsp;if (!in_array($data['model'], $allowedModels)) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;$errors[] = "Modèle non autorisé";<br>
+                        &nbsp;&nbsp;}<br><br>
+                        &nbsp;&nbsp;// Prix : entier positif<br>
+                        &nbsp;&nbsp;$price = filter_var($data['price'], <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;FILTER_VALIDATE_INT, <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;["options" => ["min_range" => 1000]]);<br>
+                        &nbsp;&nbsp;if ($price === false) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;$errors[] = "Prix invalide";<br>
+                        &nbsp;&nbsp;}<br><br>
+                        &nbsp;&nbsp;return $errors;<br>
+                        }</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-success">
+                <div class="alert-icon">💡</div>
+                <div>
+                    <strong>Conseil Pro :</strong> Validez TOUJOURS côté serveur, même si vous avez une validation JavaScript. Un attaquant peut facilement contourner le JavaScript en envoyant directement des requêtes HTTP !
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz 2 -->
+        <div class="quiz-container">
+            <div class="quiz-header" onclick="toggleQuiz(2)">
+                <span>🎯 Quiz 2 : Vulnérabilités et Validation</span>
+                <span class="quiz-arrow">▼</span>
+            </div>
+            <div id="quiz2" class="quiz-content">
+                <div class="quiz-question">
+                    <div class="question-text">1. Quelle est la meilleure protection contre l'injection SQL ?</div>
+                    <div class="quiz-options" id="q2-1">
+                        <button class="quiz-option" data-correct="false">A) Supprimer tous les guillemets</button>
+                        <button class="quiz-option" data-correct="true">B) Utiliser les requêtes préparées (prepared statements)</button>
+                        <button class="quiz-option" data-correct="false">C) Chiffrer toutes les données</button>
+                    </div>
+                    <div class="quiz-feedback">
+                        <div class="feedback-text"></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="question-text">2. XSS signifie :</div>
+                    <div class="quiz-options" id="q2-2">
+                        <button class="quiz-option" data-correct="false">A) eXtreme Server Security</button>
+                        <button class="quiz-option" data-correct="true">B) Cross-Site Scripting</button>
+                        <button class="quiz-option" data-correct="false">C) eXtra Strong Structure</button>
+                    </div>
+                    <div class="quiz-feedback">
+                        <div class="feedback-text"></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="question-text">3. Comment se protéger contre les attaques CSRF ?</div>
+                    <div class="quiz-options" id="q2-3">
+                        <button class="quiz-option" data-correct="true">A) Utiliser des tokens CSRF uniques dans les formulaires</button>
+                        <button class="quiz-option" data-correct="false">B) Vérifier l'adresse IP de l'utilisateur</button>
+                        <button class="quiz-option" data-correct="false">C) Utiliser uniquement HTTPS</button>
+                    </div>
+                    <div class="quiz-feedback">
+                        <div class="feedback-text"></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="question-text">4. Vrai ou Faux : La validation côté client (JavaScript) suffit pour sécuriser une application.</div>
+                    <div class="quiz-options" id="q2-4">
+                        <button class="quiz-option" data-correct="false">Vrai</button>
+                        <button class="quiz-option" data-correct="true">Faux - Il faut TOUJOURS valider côté serveur</button>
+                    </div>
+                    <div class="quiz-feedback">
+                        <div class="feedback-text"></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="question-text">5. Quelle fonction PHP utiliser pour échapper les données avant affichage HTML ?</div>
+                    <div class="quiz-options" id="q2-5">
+                        <button class="quiz-option" data-correct="false">A) mysql_escape_string()</button>
+                        <button class="quiz-option" data-correct="true">B) htmlspecialchars()</button>
+                        <button class="quiz-option" data-correct="false">C) strip_tags()</button>
+                    </div>
+                    <div class="quiz-feedback">
+                        <div class="feedback-text"></div>
+                    </div>
+                </div>
+
+                <div class="quiz-score">
+                    <h4>🎉 Résultat du Quiz 2</h4>
+                    <p class="score-text"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Authentification -->
+        <div id="authentification" class="section py-6 md:py-8">
+            <h2>🔐 Authentification et gestion des sessions</h2>
+
+            <div class="intro-dropdown">
+                <div class="intro-header" onclick="toggleIntro(4)">
+                    💡 Système d'authentification sécurisé
+                    <span class="intro-arrow">▼</span>
+                </div>
+                <div id="intro4" class="intro-content">
+                    <div class="intro-text">
+                        <p><strong>🎯 Objectif :</strong> Créer un système d'authentification robuste avec gestion sécurisée des sessions et hachage des mots de passe.</p>
+
+                        <h4>🔑 Les 3 piliers de l'authentification</h4>
+                        <ul>
+                            <li><strong>Identification</strong> : Qui prétendez-vous être ? (nom d'utilisateur)</li>
+                            <li><strong>Authentification</strong> : Prouvez-le ! (mot de passe)</li>
+                            <li><strong>Autorisation</strong> : Que pouvez-vous faire ? (droits et permissions)</li>
+                        </ul>
+
+                        <div class="intro-highlight">
+                            <strong>🎯 Enjeu critique :</strong> Un système d'authentification faible = porte d'entrée pour tous les pirates. C'est votre première ligne de défense !
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>🔒 Hachage sécurisé des mots de passe</h3>
+
+            <div class="comparison-grid">
+                <div class="comparison-card" style="border: 3px solid #ef4444;">
+                    <h4 style="color: #ef4444;">❌ Anciennes méthodes (Dangereuses)</h4>
+                    <div style="background: #fef2f2; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                        <p><strong>Texte en clair :</strong></p>
+                        <code style="font-size: 0.9em;">password123</code>
+                        <br><br>
+                        <p><strong>MD5 / SHA1 :</strong></p>
+                        <code style="font-size: 0.9em;">md5('password123')</code>
+                        <br><br>
+                        <p style="color: #ef4444; margin-top: 10px;"><strong>Problèmes :</strong> Reversible, attaques par dictionnaire, rainbow tables</p>
+                    </div>
+                </div>
+
+                <div class="comparison-card" style="border: 3px solid #10b981;">
+                    <h4 style="color: #10b981;">✅ Méthode moderne (Sécurisée)</h4>
+                    <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; margin-top: 15px; font-family: monospace;">
+                        <code>// Hachage à l'inscription<br>
+                        $password = $_POST['password'];<br>
+                        $hash = password_hash($password, <br>
+                        &nbsp;&nbsp;PASSWORD_DEFAULT);<br><br>
+                        // Vérification à la connexion<br>
+                        $inputPassword = $_POST['password'];<br>
+                        $storedHash = getUserHash($username);<br><br>
+                        if (password_verify($inputPassword, <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;$storedHash)) {<br>
+                        &nbsp;&nbsp;// Connexion réussie<br>
+                        }</code>
+                    </div>
+                </div>
+            </div>
+
+            <h3>🍪 Gestion sécurisée des sessions</h3>
+
+            <div class="security-cards">
+                <div class="security-card security-protection">
+                    <div class="security-icon">🛡️</div>
+                    <h3 style="color: #3b82f6;">Configuration Session</h3>
+                    <p><strong>Paramètres :</strong> Sécuriser PHP sessions</p>
+                    <br>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
+                        <code>// Configuration sécurisée<br>
+                        ini_set('session.cookie_httponly', 1);<br>
+                        ini_set('session.cookie_secure', 1);<br>
+                        ini_set('session.use_only_cookies', 1);<br><br>
+                        session_start();<br>
+                        // Régénérer l'ID après connexion<br>
+                        session_regenerate_id(true);</code>
+                    </div>
+                </div>
+
+                <div class="security-card security-auth">
+                    <div class="security-icon">🔒</div>
+                    <h3 style="color: #10b981;">Gestion des droits</h3>
+                    <p><strong>Principe :</strong> Contrôler l'accès aux ressources</p>
+                    <br>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
+                        <code>function requireAuth() {<br>
+                        &nbsp;&nbsp;if (!isset($_SESSION['user_id'])) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;header('Location: login.php');<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;exit();<br>
+                        &nbsp;&nbsp;}<br>
+                        }<br><br>
+                        function requireRole($role) {<br>
+                        &nbsp;&nbsp;requireAuth();<br>
+                        &nbsp;&nbsp;if ($_SESSION['role'] !== $role) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;die('Accès refusé');<br>
+                        &nbsp;&nbsp;}<br>
+                        }</code>
+                    </div>
+                </div>
+
+                <div class="security-card security-error">
+                    <div class="security-icon">⚡</div>
+                    <h3 style="color: #ef4444;">Protection Force Brute</h3>
+                    <p><strong>Méthode :</strong> Limiter les tentatives</p>
+                    <br>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
+                        <code>function checkAttempts($username) {<br>
+                        &nbsp;&nbsp;$attempts = getFailedAttempts($username);<br>
+                        &nbsp;&nbsp;if ($attempts >= 5) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;$lastAttempt = getLastAttempt($username);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (time() - $lastAttempt < 1800) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;die('Compte bloqué 30min');<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;}<br>
+                        }</code>
+                    </div>
+                </div>
+
+                <div class="security-card security-vulnerability">
+                    <div class="security-icon">⚠️</div>
+                    <h3 style="color: #f59e0b;">Déconnexion sécurisée</h3>
+                    <p><strong>Important :</strong> Nettoyer complètement</p>
+                    <br>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
+                        <code>function logout() {<br>
+                        &nbsp;&nbsp;session_start();<br>
+                        &nbsp;&nbsp;// Vider les variables<br>
+                        &nbsp;&nbsp;$_SESSION = array();<br>
+                        &nbsp;&nbsp;// Détruire le cookie<br>
+                        &nbsp;&nbsp;if (isset($_COOKIE[session_name()])) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;setcookie(session_name(), '',<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;time()-3600, '/');<br>
+                        &nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;// Détruire la session<br>
+                        &nbsp;&nbsp;session_destroy();<br>
+                        }</code>
+                    </div>
+                </div>
+            </div>
+
+            <h3>🏈 Exemple sport : Plateforme de paris</h3>
+            <div class="workflow-steps">
+                <div class="workflow-step">
+                    <h4>1️⃣ Inscription</h4>
+                    <p>Hachage sécurisé du mot de passe</p>
+                </div>
+                <div class="workflow-step">
+                    <h4>2️⃣ Connexion</h4>
+                    <p>Vérification + création session</p>
+                </div>
+                <div class="workflow-step">
+                    <h4>3️⃣ Navigation</h4>
+                    <p>Contrôle des droits à chaque page</p>
+                </div>
+                <div class="workflow-step">
+                    <h4>4️⃣ Actions sensibles</h4>
+                    <p>Re-vérification pour les paris</p>
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <div class="alert-icon">⚠️</div>
+                <div>
+                    <strong>Attention aux sessions :</strong> Ne stockez JAMAIS le mot de passe en session ! Seulement l'ID utilisateur, le rôle, et les informations non sensibles. Le mot de passe ne doit exister qu'au moment de la vérification.
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Bonnes pratiques -->
+        <div id="bonnes-pratiques" class="section py-6 md:py-8">
+            <h2>🛡️ Bonnes pratiques et sécurisation avancée</h2>
+
+            <div class="intro-dropdown">
+                <div class="intro-header" onclick="toggleIntro(5)">
+                    💡 Headers de sécurité et audit de code
+                    <span class="intro-arrow">▼</span>
+                </div>
+                <div id="intro5" class="intro-content">
+                    <div class="intro-text">
+                        <p><strong>🎯 Objectif :</strong> Appliquer les bonnes pratiques de sécurité avancées : headers HTTP, configuration serveur, et méthodes d'audit.</p>
+
+                        <h4>🔐 Défense en profondeur</h4>
+                        <p>La sécurité ne repose pas sur une seule mesure mais sur <strong>plusieurs couches</strong> :</p>
+                        <ul>
+                            <li><strong>Couche application</strong> : Validation, échappement, authentification</li>
+                            <li><strong>Couche serveur</strong> : Configuration PHP, headers HTTP</li>
+                            <li><strong>Couche réseau</strong> : HTTPS, firewall, monitoring</li>
+                            <li><strong>Couche humaine</strong> : Formation, sensibilisation, audit</li>
+                        </ul>
+
+                        <div class="intro-highlight">
+                            <strong>🎯 Principe clé :</strong> Même si une couche est compromise, les autres doivent maintenir la sécurité. C'est comme un château avec plusieurs enceintes !
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>📨 Headers de sécurité HTTP</h3>
+
+            <div class="security-cards">
+                <div class="security-card security-protection">
+                    <div class="security-icon">🛡️</div>
+                    <h3 style="color: #3b82f6;">Headers Essentiels</h3>
+                    <p><strong>Protection :</strong> Configuration navigateur</p>
+                    <br>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
+                        <code>// Protection XSS<br>
+                        header('X-XSS-Protection: 1; mode=block');<br><br>
+                        // Empêcher iframe<br>
+                        header('X-Frame-Options: DENY');<br><br>
+                        // Type MIME strict<br>
+                        header('X-Content-Type-Options: nosniff');<br><br>
+                        // HTTPS strict<br>
+                        header('Strict-Transport-Security: <br>
+                        &nbsp;&nbsp;max-age=31536000; includeSubDomains');</code>
+                    </div>
+                </div>
+
+                <div class="security-card security-auth">
+                    <div class="security-icon">🔒</div>
+                    <h3 style="color: #10b981;">Content Security Policy</h3>
+                    <p><strong>CSP :</strong> Contrôler les ressources chargées</p>
+                    <br>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
+                        <code>// CSP stricte<br>
+                        header("Content-Security-Policy: <br>
+                        &nbsp;&nbsp;default-src 'self'; <br>
+                        &nbsp;&nbsp;script-src 'self' 'unsafe-inline'; <br>
+                        &nbsp;&nbsp;style-src 'self' 'unsafe-inline'; <br>
+                        &nbsp;&nbsp;img-src 'self' data: https:; <br>
+                        &nbsp;&nbsp;connect-src 'self'; <br>
+                        &nbsp;&nbsp;font-src 'self'");</code>
+                    </div>
+                </div>
+
+                <div class="security-card security-error">
+                    <div class="security-icon">⚡</div>
+                    <h3 style="color: #ef4444;">Configuration PHP</h3>
+                    <p><strong>Serveur :</strong> Durcir la configuration</p>
+                    <br>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
+                        <code>// Dans php.ini en production<br>
+                        display_errors = Off<br>
+                        log_errors = On<br>
+                        expose_php = Off<br>
+                        allow_url_fopen = Off<br>
+                        allow_url_include = Off<br>
+                        session.cookie_httponly = 1<br>
+                        session.cookie_secure = 1</code>
+                    </div>
+                </div>
+
+                <div class="security-card security-vulnerability">
+                    <div class="security-icon">⚠️</div>
+                    <h3 style="color: #f59e0b;">Permissions fichiers</h3>
+                    <p><strong>Système :</strong> Droits d'accès minimaux</p>
+                    <br>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
+                        <code># Permissions recommandées<br>
+                        # Fichiers PHP : 644<br>
+                        chmod 644 *.php<br><br>
+                        # Dossiers : 755<br>
+                        chmod 755 /var/www/<br><br>
+                        # Config sensible : 600<br>
+                        chmod 600 config.php<br><br>
+                        # Uploads : 755 (pas 777 !)<br>
+                        chmod 755 uploads/</code>
+                    </div>
+                </div>
+            </div>
+
+            <h3>🔍 Audit et tests de sécurité</h3>
+
+            <div class="best-practices">
+                <h4 style="margin-bottom: 15px;">🛠️ Outils d'audit automatisé :</h4>
+                <ul>
+                    <li><strong>PHPStan</strong> : Analyse statique du code PHP</li>
+                    <li><strong>RIPS</strong> : Scanner de vulnérabilités PHP</li>
+                    <li><strong>Snyk</strong> : Test des dépendances (Composer)</li>
+                    <li><strong>OWASP ZAP</strong> : Scanner web gratuit</li>
+                    <li><strong>Nmap</strong> : Scan des ports ouverts</li>
+                    <li><strong>SSL Labs</strong> : Test de configuration HTTPS</li>
+                </ul>
+            </div>
+
+            <h3>📋 Checklist de sécurité avant production</h3>
+
+            <div class="comparison-grid" style="grid-template-columns: 1fr;">
+                <div class="comparison-card">
+                    <h4>✅ Liste de vérification obligatoire</h4>
+                    <div style="margin-top: 15px;">
+                        <p><strong>🔐 Authentification :</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>✓ Mots de passe hachés avec password_hash()</li>
+                            <li>✓ Protection contre force brute (limitation tentatives)</li>
+                            <li>✓ Sessions sécurisées (httponly, secure)</li>
+                            <li>✓ Déconnexion propre (destruction complète session)</li>
+                        </ul>
+                        
+                        <p style="margin-top: 20px;"><strong>🛡️ Protection données :</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>✓ Toutes les entrées validées côté serveur</li>
+                            <li>✓ Échappement avant affichage (htmlspecialchars)</li>
+                            <li>✓ Requêtes préparées uniquement</li>
+                            <li>✓ CSRF tokens sur formulaires sensibles</li>
+                        </ul>
+                        
+                        <p style="margin-top: 20px;"><strong>⚙️ Configuration :</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>✓ display_errors = Off en production</li>
+                            <li>✓ Headers de sécurité configurés</li>
+                            <li>✓ HTTPS partout (SSL/TLS)</li>
+                            <li>✓ Permissions fichiers restrictives</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h3>🎮 Exemple gaming : Sécurisation d'un tournoi e-sport</h3>
+            <div class="alert alert-info">
+                <div class="alert-icon">🎯</div>
+                <div>
+                    <strong>Cas concret :</strong> Pour un tournoi en ligne avec des prix en argent, on applique toutes les mesures : authentification renforcée (2FA), logging de toutes les actions, headers CSP pour empêcher les triches par injection de code, monitoring en temps réel des tentatives d'intrusion, et sauvegarde chiffrée des scores !
+                </div>
+            </div>
+
+            <div class="alert alert-success">
+                <div class="alert-icon">🛡️</div>
+                <div>
+                    <strong>Règle d'or :</strong> La sécurité n'est jamais acquise. Mettez en place une veille technologique, des audits réguliers, et formez-vous continuellement aux nouvelles menaces !
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz 3 -->
+        <div class="quiz-container">
+            <div class="quiz-header" onclick="toggleQuiz(3)">
+                <span>🎯 Quiz 3 : Authentification et Bonnes pratiques</span>
+                <span class="quiz-arrow">▼</span>
+            </div>
+            <div id="quiz3" class="quiz-content">
+                <div class="quiz-question">
+                    <div class="question-text">1. Quelle fonction PHP utiliser pour hacher un mot de passe de façon sécurisée ?</div>
+                    <div class="quiz-options" id="q3-1">
+                        <button class="quiz-option" data-correct="false">A) md5()</button>
+                        <button class="quiz-option" data-correct="true">B) password_hash()</button>
+                        <button class="quiz-option" data-correct="false">C) sha1()</button>
+                    </div>
+                    <div class="quiz-feedback">
+                        <div class="feedback-text"></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="question-text">2. Pourquoi utiliser session_regenerate_id() après une connexion ?</div>
+                    <div class="quiz-options" id="q3-2">
+                        <button class="quiz-option" data-correct="false">A) Pour améliorer les performances</button>
+                        <button class="quiz-option" data-correct="true">B) Pour éviter la fixation de session</button>
+                        <button class="quiz-option" data-correct="false">C) Parce que c'est obligatoire en PHP</button>
+                    </div>
+                    <div class="quiz-feedback">
+                        <div class="feedback-text"></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="question-text">3. Que fait le header "X-Frame-Options: DENY" ?</div>
+                    <div class="quiz-options" id="q3-3">
+                        <button class="quiz-option" data-correct="true">A) Empêche l'affichage de la page dans une iframe</button>
+                        <button class="quiz-option" data-correct="false">B) Bloque tous les scripts JavaScript</button>
+                        <button class="quiz-option" data-correct="false">C) Force l'utilisation d'HTTPS</button>
+                    </div>
+                    <div class="quiz-feedback">
+                        <div class="feedback-text"></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="question-text">4. Vrai ou Faux : En production, il faut configurer "display_errors = On" pour débugger facilement.</div>
+                    <div class="quiz-options" id="q3-4">
+                        <button class="quiz-option" data-correct="false">Vrai</button>
+                        <button class="quiz-option" data-correct="true">Faux - display_errors = Off en production</button>
+                    </div>
+                    <div class="quiz-feedback">
+                        <div class="feedback-text"></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="question-text">5. Que signifie le principe de "défense en profondeur" ?</div>
+                    <div class="quiz-options" id="q3-5">
+                        <button class="quiz-option" data-correct="false">A) Utiliser des mots de passe très longs</button>
+                        <button class="quiz-option" data-correct="true">B) Multiplier les couches de sécurité</button>
+                        <button class="quiz-option" data-correct="false">C) Cacher son code source</button>
+                    </div>
+                    <div class="quiz-feedback">
+                        <div class="feedback-text"></div>
+                    </div>
+                </div>
+
+                <div class="quiz-score">
+                    <h4>🎉 Résultat du Quiz 3</h4>
+                    <p class="score-text"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Synthèse -->
+        <div id="synthese" class="section py-6 md:py-8">
+            <h2>🎓 Synthèse et Fiche Récapitulative</h2>
+
+            <div class="alert alert-success">
+                <div class="alert-icon">🎉</div>
+                <div>
+                    <strong>Félicitations !</strong> Vous maîtrisez maintenant les bases essentielles de la sécurité en PHP. Ces compétences sont cruciales pour développer des applications web robustes et protégées !
+                </div>
+            </div>
+
+            <h3>📋 Fiche Récapitulative : Checklist du développeur sécurisé</h3>
+
+            <div class="checklist">
+                <h4 style="margin-bottom: 20px; color: #667eea;">✅ Gestion des erreurs</h4>
+                
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span><strong>Configurer PHP en production</strong> - display_errors = Off, log_errors = On</span>
+                </div>
+                
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span><strong>Utiliser try-catch systématiquement</strong> - Capturer et traiter les exceptions</span>
+                </div>
+                
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span><strong>Logger les erreurs de façon sécurisée</strong> - Informations techniques pour debug uniquement</span>
+                </div>
+
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span><strong>Créer des exceptions personnalisées</strong> - Gestion spécifique par type d'erreur</span>
+                </div>
+
+                <h4 style="margin: 30px 0 20px 0; color: #667eea;">✅ Protection contre les vulnérabilités</h4>
+                
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span><strong>Utiliser UNIQUEMENT des requêtes préparées</strong> - Protection injection SQL</span>
+                </div>
+                
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span><strong>Échapper avec htmlspecialchars()</strong> - Protection XSS avant affichage</span>
+                </div>
+                
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span><strong>Implémenter des tokens CSRF</strong> - Protection actions non autorisées</span>
+                </div>
+                
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span><strong>Valider TOUJOURS côté serveur</strong> - Ne jamais faire confiance au client</span>
+                </div>
+
+                <h4 style="margin: 30px 0 20px 0; color: #667eea;">✅ Validation et filtrage</h4>
+                
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span><strong>Utiliser filter_var() pour la validation</strong> - Emails, entiers, URLs, etc.</span>
+                </div>
+                
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span><strong>Privilégier les whitelists aux blacklists</strong> - Définir ce qui est autorisé</span>
+                </div>
+                
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span><strong>Valider le format ET la logique métier</strong> - Cohérence des données</span>
+                </div>
+                
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span><strong>Échapper selon le contexte</strong> - HTML, URL, JavaScript différemment</span>
+                </div>
+
+                <h4 style="margin: 30px 0 20px 0; color: #667eea;">✅ Authentification et sessions</h4>
+                
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span><strong>Hacher avec password_hash()</strong> - Méthode moderne et sécurisée</span>
+                </div>
+                
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span><strong>Configurer les sessions en sécurisé</strong> - httponly, secure, regenerate_id</span>
+                </div>
+                
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span><strong>Implémenter la protection force brute</strong> - Limiter les tentatives</span>
+                </div>
+                
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span><strong>Contrôler les droits d'accès</strong> - Vérifier les permissions à chaque action</span>
+                </div>
+
+                <h4 style="margin: 30px 0 20px 0; color: #667eea;">✅ Headers et configuration</h4>
+                
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span><strong>Configurer les headers de sécurité</strong> - X-Frame-Options, CSP, HSTS</span>
+                </div>
+                
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span><strong>Utiliser HTTPS partout</strong> - Chiffrement de toutes les communications</span>
+                </div>
+                
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span><strong>Définir les permissions fichiers</strong> - Accès minimal nécessaire</span>
+                </div>
+                
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span><strong>Masquer les informations serveur</strong> - expose_php = Off</span>
+                </div>
+
+                <h4 style="margin: 30px 0 20px 0; color: #667eea;">✅ Audit et maintenance</h4>
+                
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span><strong>Effectuer des audits de sécurité réguliers</strong> - Outils automatisés + review manuel</span>
+                </div>
+                
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span><strong>Maintenir les dépendances à jour</strong> - Patches de sécurité PHP, libraries</span>
+                </div>
+                
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span><strong>Monitorer les logs d'erreur</strong> - Détecter les tentatives d'attaque</span>
+                </div>
+                
+                <div class="checklist-item" onclick="toggleCheckbox(this)">
+                    <div class="checkbox"></div>
+                    <span><strong>Tester sur un environnement isolé</strong> - Jamais directement en production</span>
+                </div>
+            </div>
+
+            <h3>🎯 Points clés à retenir</h3>
+
+            <div class="security-cards">
+                <div class="security-card security-error">
+                    <div class="security-icon">⚡</div>
+                    <h3 style="color: #ef4444;">Gestion d'erreurs</h3>
+                    <p>Try-catch systématique, logging sécurisé, messages utilisateur simples</p>
+                </div>
+
+                <div class="security-card security-vulnerability">
+                    <div class="security-icon">⚠️</div>
+                    <h3 style="color: #f59e0b;">Top 3 vulnérabilités</h3>
+                    <p>Injection SQL, XSS, CSRF - Maîtriser les protections contre ces failles</p>
+                </div>
+
+                <div class="security-card security-protection">
+                    <div class="security-icon">🛡️</div>
+                    <h3 style="color: #3b82f6;">Validation données</h3>
+                    <p>Ne jamais faire confiance aux entrées utilisateur, valider côté serveur</p>
+                </div>
+
+                <div class="security-card security-auth">
+                    <div class="security-icon">🔒</div>
+                    <h3 style="color: #10b981;">Authentification</h3>
+                    <p>password_hash(), sessions sécurisées, contrôle des droits d'accès</p>
+                </div>
+            </div>
+
+            <h3>📚 Ressources pour aller plus loin</h3>
+
+            <div class="best-practices">
+                <ul>
+                    <li><strong>OWASP Top 10</strong> : <a href="https://owasp.org/www-project-top-ten/" target="_blank" style="color: #667eea;">owasp.org/www-project-top-ten/</a> - Référence des vulnérabilités</li>
+                    <li><strong>PHP Security Guide</strong> : <a href="https://phpsec.org/" target="_blank" style="color: #667eea;">phpsec.org</a> - Guide complet PHP</li>
+                    <li><strong>ANSSI</strong> : <a href="https://www.ssi.gouv.fr/" target="_blank" style="color: #667eea;">ssi.gouv.fr</a> - Recommandations sécurité françaises</li>
+                    <li><strong>Mozilla Security</strong> : <a href="https://infosec.mozilla.org/" target="_blank" style="color: #667eea;">infosec.mozilla.org</a> - Bonnes pratiques web</li>
+                    <li><strong>Security Headers</strong> : <a href="https://securityheaders.com/" target="_blank" style="color: #667eea;">securityheaders.com</a> - Tester vos headers</li>
+                </ul>
+            </div>
+
+            <h3>🚀 Prochaines étapes</h3>
+
+            <div class="workflow-steps">
+                <div class="workflow-step">
+                    <h4>1️⃣ Pratiquer</h4>
+                    <p>Appliquer sur vos projets existants</p>
+                </div>
+                <div class="workflow-step">
+                    <h4>2️⃣ Auditer</h4>
+                    <p>Scanner vos applications avec OWASP ZAP</p>
+                </div>
+                <div class="workflow-step">
+                    <h4>3️⃣ Approfondir</h4>
+                    <p>Étudier des CVE récentes en PHP</p>
+                </div>
+                <div class="workflow-step">
+                    <h4>4️⃣ Certifier</h4>
+                    <p>Viser une certification sécurité</p>
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <div class="alert-icon">⚠️</div>
+                <div>
+                    <strong>Important :</strong> La sécurité évolue constamment. Abonnez-vous aux alertes de sécurité PHP, suivez les blogs spécialisés, et mettez régulièrement à jour vos connaissances. Un code sécurisé aujourd'hui peut devenir vulnérable demain !
+                </div>
+            </div>
+
+            <div class="alert alert-success">
+                <div class="alert-icon">✅</div>
+                <div>
+                    <strong>Mission accomplie !</strong> Vous avez maintenant les bases solides pour développer des applications PHP sécurisées. La sécurité est un état d'esprit : intégrez ces réflexes dès maintenant dans tous vos projets !
+                    <br><br>
+                    <strong>Motto du développeur sécurisé :</strong> "Je ne fais confiance à personne, pas même à moi-même !" 😄
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-8">
+            <div class="flex flex-wrap justify-center gap-3 py-6" style="border-top: 2px solid #e5e7eb;">
+                <a href="#intro" style="background: #667eea; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600;">⬆️ Retour au début</a>
+                <button onclick="window.print()" style="background: #10b981; color: white; padding: 12px 24px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600;">🖨️ Imprimer le cours</button>
+            </div>
+            <div style="text-align: center; color: #666; padding: 20px; font-size: 0.9em;">
+                <p>🔐 Cours Sécurité PHP - Formation Développement</p>
+                <p>🛡️ Sécurisez vos applications et protégez vos utilisateurs !</p>
+            </div>
+        </footer>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
