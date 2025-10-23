@@ -400,6 +400,41 @@ function updateChecklistProgress() {
     }
 }
 
+// ═══════════════════════════════════════════════════════════
+// GESTION DES TABS (ONGLETS)
+// ═══════════════════════════════════════════════════════════
+function switchTab(tabsContainerId, tabIndex) {
+    const container = document.getElementById(tabsContainerId);
+    if (!container) return;
+
+    // Désactiver tous les onglets et contenus
+    const tabs = container.querySelectorAll('.code-tab');
+    const contents = container.querySelectorAll('.code-tab-content');
+
+    tabs.forEach(tab => tab.classList.remove('active'));
+    contents.forEach(content => content.classList.remove('active'));
+
+    // Activer l'onglet et le contenu sélectionnés
+    tabs[tabIndex].classList.add('active');
+    contents[tabIndex].classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════════════
+// GESTION DES ACCORDÉONS
+// ═══════════════════════════════════════════════════════════
+function toggleAccordion(accordionId) {
+    const header = document.querySelector(`[data-accordion="${accordionId}"]`);
+    const content = document.getElementById(accordionId);
+
+    if (!header || !content) return;
+
+    const isActive = content.classList.contains('active');
+
+    // Toggle l'état actif
+    header.classList.toggle('active');
+    content.classList.toggle('active');
+}
+
 // Initialisation au chargement de la page
 document.addEventListener('DOMContentLoaded', function() {
     // Randomiser les réponses des quiz

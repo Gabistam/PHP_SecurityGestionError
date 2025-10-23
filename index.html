@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sécurité et Gestion d'Erreurs en PHP - Formation Développement</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Prism.js CSS pour la coloration syntaxique -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css">
 </head>
 <body class="overflow-x-hidden">
@@ -45,7 +48,7 @@
                         <p><strong>🎯 Objectif :</strong> Comprendre pourquoi la sécurité est cruciale dans le développement PHP et comment protéger vos applications contre les attaques courantes.</p>
 
                         <h4>🔒 Qu'est-ce que la sécurité web ?</h4>
-                        <p>La sécurité web consiste à <strong>protéger votre application</strong> contre les attaques malveillantes :</p>
+                        <p>La sécurité web consiste à <strong>protéger votre application</strong> contre les attaques malveillantes </p>
                         <ul>
                             <li><strong>Protéger les données</strong> : Informations personnelles, mots de passe, données bancaires</li>
                             <li><strong>Préserver l'intégrité</strong> : Empêcher la modification non autorisée du contenu</li>
@@ -116,74 +119,116 @@
 
             <h3>🔧 Le système try-catch en PHP</h3>
 
-            <div class="security-cards">
-                <div class="security-card security-error">
-                    <div class="security-icon">⚡</div>
-                    <h3 style="color: #ef4444; margin-bottom: 15px;">Try-Catch Basique</h3>
+            <!-- SYSTÈME DE TABS -->
+            <div class="code-tabs-container" id="errorTabs">
+                <!-- En-têtes des onglets -->
+                <div class="code-tabs">
+                    <button class="code-tab active" onclick="switchTab('errorTabs', 0)">⚡ Try-Catch Basique</button>
+                    <button class="code-tab" onclick="switchTab('errorTabs', 1)">🔒 Exceptions Personnalisées</button>
+                    <button class="code-tab" onclick="switchTab('errorTabs', 2)">🛡️ Logging Sécurisé</button>
+                    <button class="code-tab" onclick="switchTab('errorTabs', 3)">⚠️ Gestion PDO</button>
+                </div>
+
+                <!-- Contenu Tab 1 : Try-Catch Basique -->
+                <div class="code-tab-content active">
+                    <h4>⚡ Try-Catch Basique</h4>
                     <p><strong>Structure :</strong> Capture et traite les exceptions</p>
-                    <br>
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
-                        <code>try {<br>
-                        &nbsp;&nbsp;// Code risqué<br>
-                        &nbsp;&nbsp;$result = riskyFunction();<br>
-                        } catch (Exception $e) {<br>
-                        &nbsp;&nbsp;// Gestion de l'erreur<br>
-                        &nbsp;&nbsp;logError($e->getMessage());<br>
-                        &nbsp;&nbsp;showUserError("Erreur technique");<br>
-                        }</code>
-                    </div>
+                    <pre class="line-numbers"><code class="language-php">// Bloc try : code susceptible de générer une erreur
+try {
+    // Appel d'une fonction qui pourrait échouer
+    $result = riskyFunction();
+
+} catch (Exception $e) {
+    // Bloc catch : on capture l'exception si elle survient
+
+    // On enregistre l'erreur technique dans les logs (pour nous, développeurs)
+    logError($e->getMessage());
+
+    // On affiche un message simple à l'utilisateur (pas de détails techniques !)
+    showUserError("Une erreur est survenue. Veuillez réessayer.");
+}</code></pre>
                 </div>
 
-                <div class="security-card security-auth">
-                    <div class="security-icon">🔒</div>
-                    <h3 style="color: #10b981; margin-bottom: 15px;">Exceptions Personnalisées</h3>
+                <!-- Contenu Tab 2 : Exceptions Personnalisées -->
+                <div class="code-tab-content">
+                    <h4>🔒 Exceptions Personnalisées</h4>
                     <p><strong>Avantage :</strong> Gestion spécifique par type d'erreur</p>
-                    <br>
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
-                        <code>class DatabaseException extends Exception {}<br>
-                        class ValidationException extends Exception {}<br><br>
-                        try {<br>
-                        &nbsp;&nbsp;validateUser($data);<br>
-                        } catch (ValidationException $e) {<br>
-                        &nbsp;&nbsp;// Erreur de validation<br>
-                        } catch (DatabaseException $e) {<br>
-                        &nbsp;&nbsp;// Erreur de base de données<br>
-                        }</code>
-                    </div>
+                    <pre class="line-numbers"><code class="language-php">// 1. CRÉATION D'EXCEPTIONS PERSONNALISÉES
+// On crée des classes d'exception spécifiques pour chaque type d'erreur
+
+// Exception pour les erreurs de base de données
+class DatabaseException extends Exception {}
+
+// Exception pour les erreurs de validation de données
+class ValidationException extends Exception {}
+
+// 2. UTILISATION AVEC GESTION DIFFÉRENCIÉE
+try {
+    // On tente de valider les données utilisateur
+    validateUser($data);
+
+} catch (ValidationException $e) {
+    // Si c'est une erreur de validation (email invalide, champ manquant, etc.)
+    echo "Vos données sont incorrectes : " . $e->getMessage();
+
+} catch (DatabaseException $e) {
+    // Si c'est une erreur de base de données (connexion perdue, table inexistante, etc.)
+    logError("DB Error: " . $e->getMessage());
+    echo "Service temporairement indisponible.";
+}</code></pre>
                 </div>
 
-                <div class="security-card security-protection">
-                    <div class="security-icon">🛡️</div>
-                    <h3 style="color: #3b82f6; margin-bottom: 15px;">Logging Sécurisé</h3>
+                <!-- Contenu Tab 3 : Logging Sécurisé -->
+                <div class="code-tab-content">
+                    <h4>🛡️ Logging Sécurisé</h4>
                     <p><strong>Principe :</strong> Enregistrer sans exposer</p>
-                    <br>
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
-                        <code>function logError($message) {<br>
-                        &nbsp;&nbsp;$logEntry = date('Y-m-d H:i:s') . <br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;" - " . $message . PHP_EOL;<br>
-                        &nbsp;&nbsp;file_put_contents(<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;'/secure/logs/error.log',<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;$logEntry, FILE_APPEND<br>
-                        &nbsp;&nbsp;);<br>
-                        }</code>
-                    </div>
+                    <pre class="line-numbers"><code class="language-php">/**
+ * Fonction de logging sécurisé
+ * Enregistre les erreurs dans un fichier LOG sans les afficher à l'utilisateur
+ */
+function logError($message) {
+    // 1. Création d'une entrée de log avec horodatage
+    $logEntry = date('Y-m-d H:i:s') . " - " . $message . PHP_EOL;
+
+    // 2. Enregistrement dans un fichier sécurisé (HORS du dossier web public)
+    // FILE_APPEND : ajoute à la fin du fichier sans écraser le contenu existant
+    file_put_contents(
+        '/secure/logs/error.log',  // Chemin sécurisé (pas dans public_html/)
+        $logEntry,
+        FILE_APPEND
+    );
+
+    // Astuce : En production, utilisez aussi error_log() de PHP
+    // error_log($message, 3, '/secure/logs/error.log');
+}</code></pre>
                 </div>
 
-                <div class="security-card security-vulnerability">
-                    <div class="security-icon">⚠️</div>
-                    <h3 style="color: #f59e0b; margin-bottom: 15px;">Gestion PDO</h3>
+                <!-- Contenu Tab 4 : Gestion PDO -->
+                <div class="code-tab-content">
+                    <h4>⚠️ Gestion PDO</h4>
                     <p><strong>Spécial :</strong> Erreurs de base de données</p>
-                    <br>
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
-                        <code>try {<br>
-                        &nbsp;&nbsp;$pdo = new PDO($dsn, $user, $pass);<br>
-                        &nbsp;&nbsp;$pdo->setAttribute(PDO::ATTR_ERRMODE,<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;PDO::ERRMODE_EXCEPTION);<br>
-                        } catch (PDOException $e) {<br>
-                        &nbsp;&nbsp;logError("DB Error: " . $e->getMessage());<br>
-                        &nbsp;&nbsp;die("Service temporairement indisponible");<br>
-                        }</code>
-                    </div>
+                    <pre class="line-numbers"><code class="language-php">// CONNEXION SÉCURISÉE À LA BASE DE DONNÉES AVEC PDO
+try {
+    // Création de la connexion PDO (PHP Data Objects)
+    $pdo = new PDO($dsn, $user, $pass);
+
+    // IMPORTANT : Configuration du mode d'erreur en EXCEPTION
+    // Par défaut, PDO masque les erreurs (mode silencieux) - DANGEREUX !
+    // On force PDO à lancer des exceptions pour capturer les erreurs
+    $pdo->setAttribute(
+        PDO::ATTR_ERRMODE,          // Attribut : mode de gestion d'erreurs
+        PDO::ERRMODE_EXCEPTION      // Valeur : lancer des exceptions
+    );
+
+} catch (PDOException $e) {
+    // Capture spécifique des erreurs PDO (hérite de Exception)
+
+    // On log l'erreur technique complète pour le debug
+    logError("DB Error: " . $e->getMessage());
+
+    // On affiche un message générique à l'utilisateur (JAMAIS les détails !)
+    die("Service temporairement indisponible. Veuillez réessayer plus tard.");
+}</code></pre>
                 </div>
             </div>
 
@@ -313,61 +358,131 @@
 
             <h3>💉 Injection SQL : La reine des vulnérabilités</h3>
 
-            <div class="security-cards">
-                <div class="security-card security-vulnerability">
-                    <div class="security-icon">⚠️</div>
-                    <h3 style="color: #f59e0b;">Code Vulnérable</h3>
-                    <p><strong>❌ Dangereux :</strong> Concaténation directe</p>
-                    <br>
-                    <div style="background: #fef2f2; padding: 15px; border-radius: 8px; font-family: monospace; border-left: 4px solid #ef4444;">
-                        <code>$username = $_POST['username'];<br>
-                        $password = $_POST['password'];<br><br>
-                        $sql = "SELECT * FROM users WHERE <br>
-                        &nbsp;&nbsp;username = '$username' AND <br>
-                        &nbsp;&nbsp;password = '$password'";<br><br>
-                        $result = mysqli_query($conn, $sql);</code>
+            <!-- ACCORDÉON CODE VULNÉRABLE VS SÉCURISÉ -->
+            <div class="code-accordion">
+                <!-- Item 1 : Code Vulnérable -->
+                <div class="code-accordion-item">
+                    <div class="code-accordion-header" data-accordion="sqlVulnerable" onclick="toggleAccordion('sqlVulnerable')">
+                        <h4>❌ Code Vulnérable - Concaténation directe</h4>
+                        <span class="code-accordion-arrow">▼</span>
                     </div>
-                    <p style="margin-top: 10px;"><strong>Attaque :</strong> <code>admin' OR '1'='1' --</code></p>
+                    <div id="sqlVulnerable" class="code-accordion-content">
+                        <div class="code-accordion-body">
+                            <p><strong>⚠️ DANGEREUX :</strong> Ne jamais concaténer directement les données utilisateur dans les requêtes SQL !</p>
+                            <pre class="line-numbers"><code class="language-php">// ⚠️ CODE VULNÉRABLE - NE JAMAIS FAIRE CELA !
+
+// On récupère directement les données du formulaire
+$username = $_POST['username'];
+$password = $_POST['password'];
+
+// ❌ FAILLE DE SÉCURITÉ : Concaténation directe dans la requête SQL
+// Les variables sont insérées DIRECTEMENT dans la chaîne SQL
+$sql = "SELECT * FROM users WHERE
+    username = '$username' AND
+    password = '$password'";
+
+// Exécution de la requête vulnérable
+$result = mysqli_query($conn, $sql);
+
+// 🚨 PROBLÈME : Un attaquant peut injecter du code SQL malveillant
+// Exemple : username = "admin' OR '1'='1' --"
+// La requête devient : SELECT * FROM users WHERE username = 'admin' OR '1'='1' --' AND password = '...'
+// Résultat : Connexion réussie SANS mot de passe !</code></pre>
+                            <p style="margin-top: 15px; color: #ff6b6b;"><strong>🎯 Exemple d'attaque :</strong> <code>admin' OR '1'='1' --</code></p>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="security-card security-protection">
-                    <div class="security-icon">🛡️</div>
-                    <h3 style="color: #3b82f6;">Code Sécurisé</h3>
-                    <p><strong>✅ Sûr :</strong> Requêtes préparées</p>
-                    <br>
-                    <div style="background: #f0f9ff; padding: 15px; border-radius: 8px; font-family: monospace; border-left: 4px solid #3b82f6;">
-                        <code>$username = $_POST['username'];<br>
-                        $password = $_POST['password'];<br><br>
-                        $sql = "SELECT * FROM users WHERE <br>
-                        &nbsp;&nbsp;username = ? AND password = ?";<br><br>
-                        $stmt = $pdo->prepare($sql);<br>
-                        $stmt->execute([$username, $password]);</code>
+                <!-- Item 2 : Code Sécurisé -->
+                <div class="code-accordion-item">
+                    <div class="code-accordion-header active" data-accordion="sqlSecure" onclick="toggleAccordion('sqlSecure')">
+                        <h4>✅ Code Sécurisé - Requêtes préparées (PDO)</h4>
+                        <span class="code-accordion-arrow">▼</span>
                     </div>
-                    <p style="margin-top: 10px;"><strong>Protection :</strong> Paramètres séparés du code SQL</p>
+                    <div id="sqlSecure" class="code-accordion-content active">
+                        <div class="code-accordion-body">
+                            <p><strong>🛡️ BONNE PRATIQUE :</strong> Utilisez TOUJOURS les requêtes préparées avec PDO</p>
+                            <pre class="line-numbers"><code class="language-php">// ✅ CODE SÉCURISÉ - BONNE PRATIQUE
+
+// 1. Récupération des données utilisateur (toujours non fiables !)
+$username = $_POST['username'];
+$password = $_POST['password'];
+
+// 2. Création de la requête avec des PLACEHOLDERS (?)
+// Les ? sont des emplacements pour les valeurs, SÉPARÉS du code SQL
+$sql = "SELECT * FROM users WHERE
+    username = ? AND password = ?";
+
+// 3. PRÉPARATION de la requête (compilation SQL)
+// La structure SQL est figée, impossible de la modifier ensuite
+$stmt = $pdo->prepare($sql);
+
+// 4. EXÉCUTION avec liaison des paramètres
+// PDO échappe automatiquement les valeurs dangereuses
+// Les données sont transmises SÉPARÉMENT de la requête SQL
+$stmt->execute([$username, $password]);
+
+// 🛡️ PROTECTION : Même si $username = "admin' OR '1'='1' --"
+// PDO traite cette chaîne comme UNE VALEUR LITTÉRALE, pas comme du code SQL
+// L'injection est impossible !</code></pre>
+                            <p style="margin-top: 15px; color: #51cf66;"><strong>🔒 Avantage :</strong> Séparation totale entre code SQL et données</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <h3>🎭 XSS : Injection de JavaScript malveillant</h3>
 
-            <div class="comparison-grid">
-                <div class="comparison-card" style="border: 3px solid #ef4444;">
-                    <h4 style="color: #ef4444;">❌ Code Vulnérable</h4>
-                    <div style="background: #fef2f2; padding: 15px; border-radius: 8px; margin-top: 15px; font-family: monospace;">
-                        <code>// Affichage direct des données utilisateur<br>
-                        echo "Bonjour " . $_GET['nom'];</code>
+            <!-- ACCORDÉON XSS -->
+            <div class="code-accordion">
+                <!-- Item 1 : Code Vulnérable XSS -->
+                <div class="code-accordion-item">
+                    <div class="code-accordion-header" data-accordion="xssVulnerable" onclick="toggleAccordion('xssVulnerable')">
+                        <h4>❌ Code Vulnérable - Affichage direct sans échappement</h4>
+                        <span class="code-accordion-arrow">▼</span>
                     </div>
-                    <p style="margin-top: 15px;"><strong>Attaque possible :</strong></p>
-                    <code style="font-size: 0.8em;">?nom=&lt;script&gt;alert('XSS!')&lt;/script&gt;</code>
+                    <div id="xssVulnerable" class="code-accordion-content">
+                        <div class="code-accordion-body">
+                            <p><strong>⚠️ DANGEREUX :</strong> Ne jamais afficher directement les données utilisateur sans échappement HTML !</p>
+                            <pre class="line-numbers"><code class="language-php">// ⚠️ CODE VULNÉRABLE - FAILLE XSS !
+
+// Affichage DIRECT des données utilisateur sans filtrage
+echo "Bonjour " . $_GET['nom'];
+
+// 🚨 DANGER : Si nom = "<script>alert('XSS!')</script>"
+// Le navigateur EXÉCUTE le JavaScript malveillant !
+// Conséquences : vol de cookies, redirection, keylogger...</code></pre>
+                            <p style="margin-top: 15px; color: #ff6b6b;"><strong>🎯 Attaque possible :</strong> <code>?nom=&lt;script&gt;alert('XSS!')&lt;/script&gt;</code></p>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="comparison-card" style="border: 3px solid #10b981;">
-                    <h4 style="color: #10b981;">✅ Code Sécurisé</h4>
-                    <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; margin-top: 15px; font-family: monospace;">
-                        <code>// Échappement des caractères spéciaux<br>
-                        echo "Bonjour " . htmlspecialchars($_GET['nom'], ENT_QUOTES, 'UTF-8');</code>
+                <!-- Item 2 : Code Sécurisé XSS -->
+                <div class="code-accordion-item">
+                    <div class="code-accordion-header active" data-accordion="xssSecure" onclick="toggleAccordion('xssSecure')">
+                        <h4>✅ Code Sécurisé - htmlspecialchars() pour échapper</h4>
+                        <span class="code-accordion-arrow">▼</span>
                     </div>
-                    <p style="margin-top: 15px;"><strong>Résultat :</strong></p>
-                    <code style="font-size: 0.8em;">&lt;script&gt; devient &amp;lt;script&amp;gt;</code>
+                    <div id="xssSecure" class="code-accordion-content active">
+                        <div class="code-accordion-body">
+                            <p><strong>🛡️ BONNE PRATIQUE :</strong> Utilisez TOUJOURS htmlspecialchars() avant d'afficher des données utilisateur</p>
+                            <pre class="line-numbers"><code class="language-php">// ✅ CODE SÉCURISÉ - Protection XSS
+
+// htmlspecialchars() convertit les caractères spéciaux HTML
+// en entités HTML (&lt; &gt; &amp; etc.)
+echo "Bonjour " . htmlspecialchars(
+    $_GET['nom'],        // Donnée à échapper
+    ENT_QUOTES,          // Échapper aussi les guillemets simples et doubles
+    'UTF-8'              // Encodage (important pour les accents !)
+);
+
+// 🛡️ PROTECTION :
+// Input : <script>alert('XSS!')</script>
+// Output affiché : &lt;script&gt;alert('XSS!')&lt;/script&gt;
+// Le navigateur affiche le texte, mais N'EXÉCUTE PAS le code !</code></pre>
+                            <p style="margin-top: 15px; color: #51cf66;"><strong>🔒 Résultat :</strong> <code>&lt;script&gt;</code> devient <code>&amp;lt;script&amp;gt;</code> (texte affiché, pas exécuté)</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -390,18 +505,54 @@
 
             <div class="best-practices">
                 <h4 style="margin-bottom: 15px;">🛡️ Protection CSRF avec Token :</h4>
-                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
-                    <code>// Génération du token<br>
-                    session_start();<br>
-                    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));<br><br>
-                    // Dans le formulaire<br>
-                    &lt;input type="hidden" name="csrf_token" <br>
-                    &nbsp;&nbsp;value="&lt;?= $_SESSION['csrf_token'] ?&gt;"&gt;<br><br>
-                    // Vérification<br>
-                    if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {<br>
-                    &nbsp;&nbsp;die('CSRF Attack detected!');<br>
-                    }</code>
-                </div>
+                <pre class="line-numbers csrf-card"><code class="language-php ">
+// ═══════════════════════════════════════════════════════════
+// ÉTAPE 1 : GÉNÉRATION DU TOKEN CSRF (dans la page du formulaire)
+// ═══════════════════════════════════════════════════════════
+
+session_start(); // Démarrage de la session
+
+// Génération d'un token aléatoire unique et cryptographiquement sûr
+// bin2hex() : convertit des octets binaires en chaîne hexadécimale
+// random_bytes(32) : génère 32 octets aléatoires (256 bits de sécurité)
+$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+?>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- ÉTAPE 2 : INSERTION DU TOKEN DANS LE FORMULAIRE HTML -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<form method="POST" action="process.php">
+    <!-- Champ caché contenant le token CSRF -->
+    <!-- Ce token sera envoyé avec le formulaire -->
+    <input type="hidden" name="csrf_token"
+           value="<?= $_SESSION['csrf_token'] ?>">
+
+    <!-- Autres champs du formulaire... -->
+    <input type="submit" value="Valider">
+</form>
+
+<?php
+// ═══════════════════════════════════════════════════════════
+// ÉTAPE 3 : VÉRIFICATION DU TOKEN (dans process.php)
+// ═══════════════════════════════════════════════════════════
+
+session_start();
+
+// Comparaison stricte du token reçu avec celui en session
+// Si différents ou absent = attaque CSRF détectée !
+if (!isset($_POST['csrf_token']) ||
+    $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+
+    // 🚨 TOKEN INVALIDE : Tentative d'attaque CSRF
+    die('CSRF Attack detected! Action bloquée.');
+}
+
+// ✅ TOKEN VALIDE : On peut traiter le formulaire en toute sécurité
+// Régénération d'un nouveau token pour la prochaine requête (one-time use)
+$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+
+// Traitement du formulaire...
+</code></pre>
             </div>
 
             <h3>🎮 Exemple gaming : Plateforme e-sport</h3>
@@ -465,77 +616,179 @@
 
             <h3>🛠️ Outils de validation PHP</h3>
 
-            <div class="security-cards">
-                <div class="security-card security-protection">
-                    <div class="security-icon">🛡️</div>
-                    <h3 style="color: #3b82f6;">filter_var()</h3>
-                    <p><strong>Usage :</strong> Validation et filtrage intégrés</p>
-                    <br>
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
-                        <code>// Valider un email<br>
-                        $email = filter_var($_POST['email'], <br>
-                        &nbsp;&nbsp;FILTER_VALIDATE_EMAIL);<br><br>
-                        // Valider un entier<br>
-                        $age = filter_var($_POST['age'], <br>
-                        &nbsp;&nbsp;FILTER_VALIDATE_INT, <br>
-                        &nbsp;&nbsp;array("options" => array(<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;"min_range" => 1,<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;"max_range" => 120<br>
-                        &nbsp;&nbsp;)));</code>
-                    </div>
+            <!-- SYSTÈME DE TABS - OUTILS VALIDATION -->
+            <div class="code-tabs-container" id="validationTabs">
+                <!-- En-têtes des onglets -->
+                <div class="code-tabs">
+                    <button class="code-tab active" onclick="switchTab('validationTabs', 0)">🛡️ filter_var()</button>
+                    <button class="code-tab" onclick="switchTab('validationTabs', 1)">⚡ Expressions régulières</button>
+                    <button class="code-tab" onclick="switchTab('validationTabs', 2)">🔒 Fonctions d'échappement</button>
+                    <button class="code-tab" onclick="switchTab('validationTabs', 3)">⚠️ Whitelist vs Blacklist</button>
                 </div>
 
-                <div class="security-card security-error">
-                    <div class="security-icon">⚡</div>
-                    <h3 style="color: #ef4444;">Expressions régulières</h3>
-                    <p><strong>Usage :</strong> Validation de formats complexes</p>
-                    <br>
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
-                        <code>// Valider un numéro de téléphone<br>
-                        $pattern = '/^[0-9]{10}$/';<br>
-                        if (preg_match($pattern, $phone)) {<br>
-                        &nbsp;&nbsp;// Téléphone valide<br>
-                        }<br><br>
-                        // Valider un nom d'utilisateur<br>
-                        $pattern = '/^[a-zA-Z0-9_]{3,20}$/';<br>
-                        if (preg_match($pattern, $username)) {<br>
-                        &nbsp;&nbsp;// Username valide<br>
-                        }</code>
-                    </div>
+                <!-- Contenu Tab 1 : filter_var() -->
+                <div class="code-tab-content active">
+                    <h4>🛡️ filter_var()</h4>
+                    <p><strong>Usage :</strong> Validation et filtrage intégrés de PHP</p>
+                    <pre class="line-numbers"><code class="language-php">// ═══════════════════════════════════════════════════════════
+// FONCTION filter_var() : Validation native de PHP
+// ═══════════════════════════════════════════════════════════
+
+// ────────────────────────────────────────────────────────
+// VALIDATION D'EMAIL
+// ────────────────────────────────────────────────────────
+$email = filter_var(
+    $_POST['email'],         // Valeur à valider
+    FILTER_VALIDATE_EMAIL    // Filtre : format email RFC 5321
+);
+
+// Résultat :
+// - Si valide : retourne l'email
+// - Si invalide : retourne false
+if ($email === false) {
+    echo "Email invalide !";
+}
+
+// ────────────────────────────────────────────────────────
+// VALIDATION D'ENTIER AVEC OPTIONS
+// ────────────────────────────────────────────────────────
+$age = filter_var(
+    $_POST['age'],
+    FILTER_VALIDATE_INT,     // Filtre : nombre entier
+    array("options" => array(
+        "min_range" => 1,    // Minimum : 1
+        "max_range" => 120   // Maximum : 120
+    ))
+);
+
+// Validation stricte : doit être un entier entre 1 et 120
+if ($age === false) {
+    echo "Âge invalide ! Doit être entre 1 et 120 ans.";
+}
+
+// 💡 AUTRES FILTRES UTILES :
+// - FILTER_VALIDATE_URL : valide une URL
+// - FILTER_VALIDATE_IP : valide une adresse IP
+// - FILTER_VALIDATE_BOOLEAN : valide un booléen
+// - FILTER_SANITIZE_STRING : nettoie une chaîne (supprime balises HTML)</code></pre>
                 </div>
 
-                <div class="security-card security-auth">
-                    <div class="security-icon">🔒</div>
-                    <h3 style="color: #10b981;">Fonctions d'échappement</h3>
-                    <p><strong>Usage :</strong> Préparer pour affichage/stockage</p>
-                    <br>
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
-                        <code>// Pour l'affichage HTML<br>
-                        echo htmlspecialchars($data, <br>
-                        &nbsp;&nbsp;ENT_QUOTES, 'UTF-8');<br><br>
-                        // Pour les URLs<br>
-                        echo urlencode($data);<br><br>
-                        // Pour JavaScript<br>
-                        echo json_encode($data);</code>
-                    </div>
+                <!-- Contenu Tab 2 : Expressions régulières -->
+                <div class="code-tab-content">
+                    <h4>⚡ Expressions régulières (REGEX)</h4>
+                    <p><strong>Usage :</strong> Validation de formats complexes personnalisés</p>
+                    <pre class="line-numbers"><code class="language-php">// ═══════════════════════════════════════════════════════════
+// EXPRESSIONS RÉGULIÈRES (REGEX) : Pour formats personnalisés
+// ═══════════════════════════════════════════════════════════
+
+// ────────────────────────────────────────────────────────
+// VALIDATION NUMÉRO DE TÉLÉPHONE FRANÇAIS (10 chiffres)
+// ────────────────────────────────────────────────────────
+$pattern = '/^[0-9]{10}$/';
+// Décomposition du pattern :
+// ^ : début de la chaîne
+// [0-9] : un chiffre de 0 à 9
+// {10} : exactement 10 fois
+// $ : fin de la chaîne
+
+if (preg_match($pattern, $phone)) {
+    echo "Numéro de téléphone valide !";
+} else {
+    echo "Format invalide. Exemple : 0612345678";
+}
+
+// ────────────────────────────────────────────────────────
+// VALIDATION NOM D'UTILISATEUR
+// ────────────────────────────────────────────────────────
+$pattern = '/^[a-zA-Z0-9_]{3,20}$/';
+// Décomposition :
+// [a-zA-Z0-9_] : lettres, chiffres et underscore uniquement
+// {3,20} : longueur entre 3 et 20 caractères
+// Interdit : espaces, caractères spéciaux, emojis
+
+if (preg_match($pattern, $username)) {
+    echo "Nom d'utilisateur valide !";
+} else {
+    echo "Nom invalide. 3-20 caractères alphanumériques uniquement.";
+}
+
+// 💡 AUTRES PATTERNS UTILES :
+// Code postal FR : '/^[0-9]{5}$/'
+// Mot de passe fort : '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/'
+// Plaque immatriculation : '/^[A-Z]{2}-[0-9]{3}-[A-Z]{2}$/'</code></pre>
                 </div>
 
-                <div class="security-card security-vulnerability">
-                    <div class="security-icon">⚠️</div>
-                    <h3 style="color: #f59e0b;">Whitelist vs Blacklist</h3>
-                    <p><strong>Principe :</strong> Privilégier la whitelist</p>
-                    <br>
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
-                        <code>// ❌ Blacklist (dangereux)<br>
-                        if (strpos($input, '&lt;script&gt;') !== false) {<br>
-                        &nbsp;&nbsp;die('Interdit');<br>
-                        }<br><br>
-                        // ✅ Whitelist (sécurisé)<br>
-                        $allowed = ['admin', 'user', 'guest'];<br>
-                        if (!in_array($role, $allowed)) {<br>
-                        &nbsp;&nbsp;die('Rôle non autorisé');<br>
-                        }</code>
-                    </div>
+                <!-- Contenu Tab 3 : Fonctions d'échappement -->
+                <div class="code-tab-content">
+                    <h4>🔒 Fonctions d'échappement</h4>
+                    <p><strong>Usage :</strong> Préparer les données pour affichage ou stockage sécurisé</p>
+                    <pre class="line-numbers"><code class="language-php">// ═══════════════════════════════════════════════════════════
+// FONCTIONS D'ÉCHAPPEMENT SELON LE CONTEXTE
+// ═══════════════════════════════════════════════════════════
+
+// 1️⃣ Pour l'affichage HTML (protection XSS)
+// Convertit les caractères spéciaux HTML en entités
+$safeHtml = htmlspecialchars(
+    $data,           // Donnée à échapper
+    ENT_QUOTES,      // Échapper guillemets simples et doubles
+    'UTF-8'          // Encodage caractères
+);
+echo $safeHtml;
+
+// 2️⃣ Pour les URLs (paramètres GET)
+// Encode les caractères spéciaux pour URL
+$safeUrl = urlencode($data);
+echo "page.php?name=" . $safeUrl;
+
+// 3️⃣ Pour JavaScript (transmission de données PHP → JS)
+// Convertit en JSON sécurisé
+$safeJson = json_encode($data);
+echo "<script>const userData = " . $safeJson . ";</script>";
+
+// 4️⃣ Pour les attributs HTML
+// Échappement spécifique pour les attributs
+$safeAttr = htmlspecialchars($data, ENT_QUOTES);
+echo '<input value="' . $safeAttr . '">';
+
+// 💡 RÈGLE D'OR : Toujours échapper selon le contexte de sortie !</code></pre>
+                </div>
+
+                <!-- Contenu Tab 4 : Whitelist vs Blacklist -->
+                <div class="code-tab-content">
+                    <h4>⚠️ Whitelist vs Blacklist</h4>
+                    <p><strong>Principe :</strong> Toujours privilégier la whitelist (liste blanche)</p>
+                    <pre class="line-numbers"><code class="language-php">// ═══════════════════════════════════════════════════════════
+// WHITELIST vs BLACKLIST : Deux approches de validation
+// ═══════════════════════════════════════════════════════════
+
+// ❌ BLACKLIST (APPROCHE DANGEREUSE)
+// On interdit certaines valeurs spécifiques
+if (strpos($input, '<script>') !== false) {
+    die('Script interdit !');
+}
+// 🚨 PROBLÈME : Facilement contournable
+// Exemples de contournement :
+// - <SCRIPT> (majuscules)
+// - <scr<script>ipt> (imbrication)
+// - <img onerror="alert('XSS')"> (autre balise)
+
+// ✅ WHITELIST (APPROCHE SÉCURISÉE)
+// On autorise UNIQUEMENT les valeurs attendues
+$allowedRoles = ['admin', 'user', 'guest'];
+if (!in_array($role, $allowedRoles, true)) {
+    die('Rôle non autorisé !');
+}
+// 🛡️ AVANTAGE : Impossible de contourner
+// Seules les valeurs dans $allowedRoles sont acceptées
+
+// ✅ AUTRE EXEMPLE : Validation de type de fichier
+$allowedExtensions = ['jpg', 'png', 'pdf'];
+$extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+if (!in_array(strtolower($extension), $allowedExtensions)) {
+    die('Type de fichier non autorisé !');
+}
+
+// 💡 PRINCIPE : Par défaut tout REFUSER, autoriser explicitement le nécessaire</code></pre>
                 </div>
             </div>
 
@@ -674,115 +927,296 @@
 
             <h3>🔒 Hachage sécurisé des mots de passe</h3>
 
-            <div class="comparison-grid">
-                <div class="comparison-card" style="border: 3px solid #ef4444;">
-                    <h4 style="color: #ef4444;">❌ Anciennes méthodes (Dangereuses)</h4>
-                    <div style="background: #fef2f2; padding: 15px; border-radius: 8px; margin-top: 15px;">
-                        <p><strong>Texte en clair :</strong></p>
-                        <code style="font-size: 0.9em;">password123</code>
-                        <br><br>
-                        <p><strong>MD5 / SHA1 :</strong></p>
-                        <code style="font-size: 0.9em;">md5('password123')</code>
-                        <br><br>
-                        <p style="color: #ef4444; margin-top: 10px;"><strong>Problèmes :</strong> Reversible, attaques par dictionnaire, rainbow tables</p>
+            <!-- ACCORDÉON HACHAGE MDP -->
+            <div class="code-accordion">
+                <!-- Item 1 : Anciennes méthodes (Dangereuses) -->
+                <div class="code-accordion-item">
+                    <div class="code-accordion-header" data-accordion="hashOld" onclick="toggleAccordion('hashOld')">
+                        <h4>❌ Anciennes méthodes - MD5, SHA1 (DANGEREUSES !)</h4>
+                        <span class="code-accordion-arrow">▼</span>
+                    </div>
+                    <div id="hashOld" class="code-accordion-content">
+                        <div class="code-accordion-body">
+                            <p><strong>⚠️ CES MÉTHODES SONT OBSOLÈTES ET DANGEREUSES !</strong></p>
+                            <pre class="line-numbers"><code class="language-php">// ❌❌❌ NE JAMAIS UTILISER CES MÉTHODES ❌❌❌
+
+// 1️⃣ PIRE MÉTHODE : Stockage en clair
+$password = $_POST['password'];
+// Stocké tel quel en base : "password123"
+// 🚨 CATASTROPHIQUE : Lisible par n'importe qui ayant accès à la BDD !
+
+// 2️⃣ MÉTHODE OBSOLÈTE : MD5
+$hash = md5($password);
+// Exemple : md5("password123") = 482c811da5d5b4bc6d497ffa98491e38
+// 🚨 PROBLÈME : Algorithme rapide = facile à craquer (milliards de hashs/seconde)
+// 🚨 PROBLÈME : Rainbow tables (tables précalculées) existent
+
+// 3️⃣ MÉTHODE OBSOLÈTE : SHA1
+$hash = sha1($password);
+// Exemple : sha1("password123") = cbfdac6008f9cab4083784cbd1874f76618d2a97
+// 🚨 PROBLÈME : Même si plus lent que MD5, toujours vulnérable
+// 🚨 PROBLÈME : Collisions possibles
+
+// 4️⃣ MÉTHODE INSUFFISANTE : SHA256 sans salt
+$hash = hash('sha256', $password);
+// 🚨 PROBLÈME : Sans salt, vulnérable aux rainbow tables
+
+// 💀 CONSÉQUENCES D'UNE FAILLE :
+// - Mots de passe de tous les utilisateurs compromis
+// - Réutilisation sur d'autres sites (même email/MDP)
+// - Responsabilité légale (RGPD)
+// - Perte de confiance totale
+
+// ✅ SOLUTION : Utilisez password_hash() (voir onglet suivant)</code></pre>
+                        </div>
                     </div>
                 </div>
 
-                <div class="comparison-card" style="border: 3px solid #10b981;">
-                    <h4 style="color: #10b981;">✅ Méthode moderne (Sécurisée)</h4>
-                    <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; margin-top: 15px; font-family: monospace;">
-                        <code>// Hachage à l'inscription<br>
-                        $password = $_POST['password'];<br>
-                        $hash = password_hash($password, <br>
-                        &nbsp;&nbsp;PASSWORD_DEFAULT);<br><br>
-                        // Vérification à la connexion<br>
-                        $inputPassword = $_POST['password'];<br>
-                        $storedHash = getUserHash($username);<br><br>
-                        if (password_verify($inputPassword, <br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;$storedHash)) {<br>
-                        &nbsp;&nbsp;// Connexion réussie<br>
-                        }</code>
+                <!-- Item 2 : Méthode moderne (Sécurisée) -->
+                <div class="code-accordion-item">
+                    <div class="code-accordion-header active" data-accordion="hashModern" onclick="toggleAccordion('hashModern')">
+                        <h4>✅ Méthode moderne - password_hash() (SÉCURISÉE)</h4>
+                        <span class="code-accordion-arrow">▼</span>
+                    </div>
+                    <div id="hashModern" class="code-accordion-content active">
+                        <div class="code-accordion-body">
+                            <p><strong>🛡️ BONNE PRATIQUE :</strong> Utilisez TOUJOURS password_hash() et password_verify()</p>
+                            <pre class="line-numbers"><code class="language-php">// ═══════════════════════════════════════════════════════════
+// MÉTHODE MODERNE : password_hash() et password_verify()
+// ═══════════════════════════════════════════════════════════
+
+// ────────────────────────────────────────────────────────
+// ÉTAPE 1 : HACHAGE À L'INSCRIPTION
+// ────────────────────────────────────────────────────────
+$password = $_POST['password']; // Mot de passe en clair
+
+// password_hash() utilise bcrypt (algorithme robuste)
+// Génère automatiquement un SALT aléatoire unique
+// PASSWORD_DEFAULT : meilleur algorithme disponible (bcrypt actuellement)
+$hash = password_hash($password, PASSWORD_DEFAULT);
+
+// Exemple de hash généré (60 caractères) :
+// $2y$10$nXY.9kR8JbKp7QzJqK7q1.xZVj8bHNpO3r1vT9mK3L5eD2fG4hI6S
+// $2y$ = bcrypt | $10$ = coût | reste = salt + hash
+
+// On stocke $hash dans la base de données (PAS le mot de passe en clair !)
+
+
+// ────────────────────────────────────────────────────────
+// ÉTAPE 2 : VÉRIFICATION À LA CONNEXION
+// ────────────────────────────────────────────────────────
+$inputPassword = $_POST['password'];        // Mot de passe saisi
+$storedHash = getUserHash($username);       // Hash récupéré de la BDD
+
+// password_verify() compare intelligemment le mot de passe avec le hash
+// Extrait automatiquement le salt du hash et refait le calcul
+if (password_verify($inputPassword, $storedHash)) {
+    // ✅ SUCCÈS : Mot de passe correct
+    session_start();
+    $_SESSION['user_id'] = $userId;
+    echo "Connexion réussie !";
+
+} else {
+    // ❌ ÉCHEC : Mot de passe incorrect
+    echo "Identifiants invalides.";
+}
+
+// 🛡️ SÉCURITÉ :
+// - Chaque hash est unique (même pour le même mot de passe)
+// - Impossible de retrouver le mot de passe à partir du hash
+// - Résistant aux attaques par dictionnaire et rainbow tables
+// - Algorithme intentionnellement lent (protection brute force)</code></pre>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <h3>🍪 Gestion sécurisée des sessions</h3>
 
-            <div class="security-cards">
-                <div class="security-card security-protection">
-                    <div class="security-icon">🛡️</div>
-                    <h3 style="color: #3b82f6;">Configuration Session</h3>
-                    <p><strong>Paramètres :</strong> Sécuriser PHP sessions</p>
-                    <br>
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
-                        <code>// Configuration sécurisée<br>
-                        ini_set('session.cookie_httponly', 1);<br>
-                        ini_set('session.cookie_secure', 1);<br>
-                        ini_set('session.use_only_cookies', 1);<br><br>
-                        session_start();<br>
-                        // Régénérer l'ID après connexion<br>
-                        session_regenerate_id(true);</code>
-                    </div>
+            <!-- SYSTÈME DE TABS - GESTION SESSIONS -->
+            <div class="code-tabs-container" id="sessionsTabs">
+                <!-- En-têtes des onglets -->
+                <div class="code-tabs">
+                    <button class="code-tab active" onclick="switchTab('sessionsTabs', 0)">🛡️ Configuration Session</button>
+                    <button class="code-tab" onclick="switchTab('sessionsTabs', 1)">🔒 Gestion des droits</button>
+                    <button class="code-tab" onclick="switchTab('sessionsTabs', 2)">⚡ Protection Force Brute</button>
+                    <button class="code-tab" onclick="switchTab('sessionsTabs', 3)">⚠️ Déconnexion sécurisée</button>
                 </div>
 
-                <div class="security-card security-auth">
-                    <div class="security-icon">🔒</div>
-                    <h3 style="color: #10b981;">Gestion des droits</h3>
-                    <p><strong>Principe :</strong> Contrôler l'accès aux ressources</p>
-                    <br>
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
-                        <code>function requireAuth() {<br>
-                        &nbsp;&nbsp;if (!isset($_SESSION['user_id'])) {<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;header('Location: login.php');<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;exit();<br>
-                        &nbsp;&nbsp;}<br>
-                        }<br><br>
-                        function requireRole($role) {<br>
-                        &nbsp;&nbsp;requireAuth();<br>
-                        &nbsp;&nbsp;if ($_SESSION['role'] !== $role) {<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;die('Accès refusé');<br>
-                        &nbsp;&nbsp;}<br>
-                        }</code>
-                    </div>
+                <!-- Contenu Tab 1 : Configuration Session -->
+                <div class="code-tab-content active">
+                    <h4>🛡️ Configuration Session</h4>
+                    <p><strong>Paramètres :</strong> Sécuriser les sessions PHP</p>
+                    <pre class="line-numbers"><code class="language-php">// ═══════════════════════════════════════════════════════════
+// CONFIGURATION SÉCURISÉE DES SESSIONS PHP
+// ═══════════════════════════════════════════════════════════
+
+// 1️⃣ HttpOnly : Empêche JavaScript d'accéder au cookie de session
+// Protection contre le vol de session par XSS
+ini_set('session.cookie_httponly', 1);
+// Si activé, document.cookie ne peut pas lire le PHPSESSID
+
+// 2️⃣ Secure : Cookie transmis UNIQUEMENT via HTTPS
+// Protection contre l'interception en clair (man-in-the-middle)
+ini_set('session.cookie_secure', 1);
+// ⚠️ À activer uniquement si votre site est en HTTPS !
+
+// 3️⃣ Use only cookies : Interdit la transmission de session ID par URL
+// Empêche les fuites d'ID dans les logs serveur et l'historique
+ini_set('session.use_only_cookies', 1);
+// Sans cela : possible d'avoir ?PHPSESSID=abc123 dans l'URL (DANGEREUX)
+
+// Démarrage de la session avec ces paramètres
+session_start();
+
+// 4️⃣ RÉGÉNÉRATION de l'ID après connexion réussie
+// Protection contre la fixation de session (session fixation attack)
+session_regenerate_id(true);  // true = supprime l'ancien fichier session
+
+// 💡 IMPORTANT : Régénérer l'ID aussi :
+// - Après changement de privilèges (user → admin)
+// - Après modification du mot de passe
+// - Toutes les 15-30 minutes pour les sessions critiques</code></pre>
                 </div>
 
-                <div class="security-card security-error">
-                    <div class="security-icon">⚡</div>
-                    <h3 style="color: #ef4444;">Protection Force Brute</h3>
-                    <p><strong>Méthode :</strong> Limiter les tentatives</p>
-                    <br>
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
-                        <code>function checkAttempts($username) {<br>
-                        &nbsp;&nbsp;$attempts = getFailedAttempts($username);<br>
-                        &nbsp;&nbsp;if ($attempts >= 5) {<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;$lastAttempt = getLastAttempt($username);<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;if (time() - $lastAttempt < 1800) {<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;die('Compte bloqué 30min');<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                        &nbsp;&nbsp;}<br>
-                        }</code>
-                    </div>
+                <!-- Contenu Tab 2 : Gestion des droits -->
+                <div class="code-tab-content">
+                    <h4>🔒 Gestion des droits</h4>
+                    <p><strong>Principe :</strong> Contrôler l'accès aux ressources (middleware)</p>
+                    <pre class="line-numbers"><code class="language-php">// ═══════════════════════════════════════════════════════════
+// SYSTÈME DE CONTRÔLE D'ACCÈS (RBAC - Role-Based Access Control)
+// ═══════════════════════════════════════════════════════════
+
+// 1️⃣ Fonction : Vérifier si l'utilisateur est connecté
+function requireAuth() {
+    // Démarrer la session si pas déjà fait
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    // Vérifier si user_id existe dans la session
+    if (!isset($_SESSION['user_id'])) {
+        // Utilisateur non connecté → redirection vers login
+        header('Location: login.php');
+        exit(); // IMPORTANT : toujours exit() après header()
+    }
+}
+
+// 2️⃣ Fonction : Vérifier un rôle spécifique
+function requireRole($requiredRole) {
+    // D'abord vérifier l'authentification
+    requireAuth();
+
+    // Puis vérifier le rôle
+    if (!isset($_SESSION['role']) || $_SESSION['role'] !== $requiredRole) {
+        // Rôle insuffisant
+        http_response_code(403); // Forbidden
+        die('Accès refusé : privilèges insuffisants');
+    }
+}
+
+// 3️⃣ UTILISATION dans une page protégée
+// En haut de admin.php :
+requireRole('admin'); // Seuls les admins peuvent accéder
+
+// En haut de dashboard.php :
+requireAuth(); // Tout utilisateur connecté peut accéder</code></pre>
                 </div>
 
-                <div class="security-card security-vulnerability">
-                    <div class="security-icon">⚠️</div>
-                    <h3 style="color: #f59e0b;">Déconnexion sécurisée</h3>
-                    <p><strong>Important :</strong> Nettoyer complètement</p>
-                    <br>
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
-                        <code>function logout() {<br>
-                        &nbsp;&nbsp;session_start();<br>
-                        &nbsp;&nbsp;// Vider les variables<br>
-                        &nbsp;&nbsp;$_SESSION = array();<br>
-                        &nbsp;&nbsp;// Détruire le cookie<br>
-                        &nbsp;&nbsp;if (isset($_COOKIE[session_name()])) {<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;setcookie(session_name(), '',<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;time()-3600, '/');<br>
-                        &nbsp;&nbsp;}<br>
-                        &nbsp;&nbsp;// Détruire la session<br>
-                        &nbsp;&nbsp;session_destroy();<br>
-                        }</code>
-                    </div>
+                <!-- Contenu Tab 3 : Protection Force Brute -->
+                <div class="code-tab-content">
+                    <h4>⚡ Protection Force Brute</h4>
+                    <p><strong>Méthode :</strong> Limiter les tentatives de connexion</p>
+                    <pre class="line-numbers"><code class="language-php">// ═══════════════════════════════════════════════════════════
+// PROTECTION CONTRE LES ATTAQUES PAR FORCE BRUTE
+// Limitation des tentatives de connexion ratées
+// ═══════════════════════════════════════════════════════════
+
+/**
+ * Vérifie le nombre de tentatives de connexion ratées
+ * Bloque le compte si trop de tentatives en peu de temps
+ */
+function checkLoginAttempts($username) {
+    // Récupérer le nombre de tentatives échouées (depuis BDD ou cache)
+    $attempts = getFailedLoginAttempts($username);
+
+    // Seuil : 5 tentatives maximum
+    if ($attempts >= 5) {
+        // Récupérer le timestamp de la dernière tentative
+        $lastAttemptTime = getLastAttemptTime($username);
+
+        // Durée de blocage : 1800 secondes = 30 minutes
+        $blockDuration = 1800;
+
+        // Vérifier si le blocage est toujours actif
+        if (time() - $lastAttemptTime < $blockDuration) {
+            $remainingTime = $blockDuration - (time() - $lastAttemptTime);
+            $minutes = ceil($remainingTime / 60);
+
+            // Compte toujours bloqué
+            http_response_code(429); // Too Many Requests
+            die("Compte temporairement bloqué. Réessayez dans $minutes minutes.");
+        } else {
+            // Blocage expiré → réinitialiser le compteur
+            resetLoginAttempts($username);
+        }
+    }
+}
+
+// APPEL AVANT LA VÉRIFICATION DU MOT DE PASSE :
+checkLoginAttempts($_POST['username']);
+
+// Si mot de passe incorrect :
+incrementFailedAttempts($_POST['username']);
+
+// Si mot de passe correct :
+resetLoginAttempts($_POST['username']);</code></pre>
+                </div>
+
+                <!-- Contenu Tab 4 : Déconnexion sécurisée -->
+                <div class="code-tab-content">
+                    <h4>⚠️ Déconnexion sécurisée</h4>
+                    <p><strong>Important :</strong> Nettoyer complètement toutes les traces de session</p>
+                    <pre class="line-numbers"><code class="language-php">// ═══════════════════════════════════════════════════════════
+// DÉCONNEXION SÉCURISÉE COMPLÈTE
+// ═══════════════════════════════════════════════════════════
+
+/**
+ * Déconnecte l'utilisateur et nettoie TOUTES les traces
+ * IMPORTANT : 3 étapes obligatoires !
+ */
+function secureLogout() {
+    // Démarrer la session si pas déjà fait
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    // ÉTAPE 1 : Vider TOUTES les variables de session
+    $_SESSION = array(); // Réinitialisation complète
+
+    // ÉTAPE 2 : Détruire le cookie de session côté client
+    if (isset($_COOKIE[session_name()])) {
+        setcookie(
+            session_name(),      // Nom du cookie (PHPSESSID)
+            '',                  // Valeur vide
+            time() - 3600,       // Date expirée (1h dans le passé)
+            '/',                 // Path : tout le site
+            '',                  // Domain
+            true,                // Secure (HTTPS uniquement)
+            true                 // HttpOnly
+        );
+    }
+
+    // ÉTAPE 3 : Détruire la session côté serveur
+    session_destroy();
+
+    // OPTIONNEL : Rediriger vers la page de login
+    header('Location: login.php');
+    exit();
+}
+
+// UTILISATION dans logout.php :
+secureLogout();</code></pre>
                 </div>
             </div>
 
@@ -845,75 +1279,156 @@
 
             <h3>📨 Headers de sécurité HTTP</h3>
 
-            <div class="security-cards">
-                <div class="security-card security-protection">
-                    <div class="security-icon">🛡️</div>
-                    <h3 style="color: #3b82f6;">Headers Essentiels</h3>
-                    <p><strong>Protection :</strong> Configuration navigateur</p>
-                    <br>
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
-                        <code>// Protection XSS<br>
-                        header('X-XSS-Protection: 1; mode=block');<br><br>
-                        // Empêcher iframe<br>
-                        header('X-Frame-Options: DENY');<br><br>
-                        // Type MIME strict<br>
-                        header('X-Content-Type-Options: nosniff');<br><br>
-                        // HTTPS strict<br>
-                        header('Strict-Transport-Security: <br>
-                        &nbsp;&nbsp;max-age=31536000; includeSubDomains');</code>
-                    </div>
+            <!-- SYSTÈME DE TABS - HEADERS SÉCURITÉ -->
+            <div class="code-tabs-container" id="headersTabs">
+                <!-- En-têtes des onglets -->
+                <div class="code-tabs">
+                    <button class="code-tab active" onclick="switchTab('headersTabs', 0)">🛡️ Headers Essentiels</button>
+                    <button class="code-tab" onclick="switchTab('headersTabs', 1)">🔒 Content Security Policy</button>
+                    <button class="code-tab" onclick="switchTab('headersTabs', 2)">⚡ Configuration PHP</button>
+                    <button class="code-tab" onclick="switchTab('headersTabs', 3)">⚠️ Permissions fichiers</button>
                 </div>
 
-                <div class="security-card security-auth">
-                    <div class="security-icon">🔒</div>
-                    <h3 style="color: #10b981;">Content Security Policy</h3>
-                    <p><strong>CSP :</strong> Contrôler les ressources chargées</p>
-                    <br>
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
-                        <code>// CSP stricte<br>
-                        header("Content-Security-Policy: <br>
-                        &nbsp;&nbsp;default-src 'self'; <br>
-                        &nbsp;&nbsp;script-src 'self' 'unsafe-inline'; <br>
-                        &nbsp;&nbsp;style-src 'self' 'unsafe-inline'; <br>
-                        &nbsp;&nbsp;img-src 'self' data: https:; <br>
-                        &nbsp;&nbsp;connect-src 'self'; <br>
-                        &nbsp;&nbsp;font-src 'self'");</code>
-                    </div>
+                <!-- Contenu Tab 1 : Headers Essentiels -->
+                <div class="code-tab-content active">
+                    <h4>🛡️ Headers Essentiels</h4>
+                    <p><strong>Protection :</strong> Configuration du comportement du navigateur</p>
+                    <pre class="line-numbers"><code class="language-php">// ═══════════════════════════════════════════════════════════
+// HEADERS DE SÉCURITÉ HTTP
+// Ces headers configurent le comportement du navigateur
+// ═══════════════════════════════════════════════════════════
+
+// 1️⃣ X-XSS-Protection : Filtre XSS intégré au navigateur
+// Active la protection anti-XSS native du navigateur
+header('X-XSS-Protection: 1; mode=block');
+// 1 = activé | mode=block = bloquer la page entière si XSS détecté
+
+// 2️⃣ X-Frame-Options : Protection contre le clickjacking
+// Empêche l'affichage de votre page dans une iframe
+header('X-Frame-Options: DENY');
+// DENY = jamais dans une iframe
+// SAMEORIGIN = seulement sur votre propre domaine
+// Protège contre les attaques par superposition d'interface
+
+// 3️⃣ X-Content-Type-Options : Type MIME strict
+// Empêche le navigateur de "deviner" le type de fichier
+header('X-Content-Type-Options: nosniff');
+// Force le respect du Content-Type déclaré
+// Évite qu'un fichier .txt soit interprété comme du JS
+
+// 4️⃣ Strict-Transport-Security (HSTS) : Force HTTPS
+// Oblige le navigateur à TOUJOURS utiliser HTTPS
+header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
+// max-age=31536000 : 1 an en secondes
+// includeSubDomains : s'applique aussi aux sous-domaines
+// ⚠️ À n'utiliser QUE si TOUT votre site est en HTTPS !
+
+// 💡 Ces headers doivent être envoyés AVANT tout contenu HTML</code></pre>
                 </div>
 
-                <div class="security-card security-error">
-                    <div class="security-icon">⚡</div>
-                    <h3 style="color: #ef4444;">Configuration PHP</h3>
-                    <p><strong>Serveur :</strong> Durcir la configuration</p>
-                    <br>
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
-                        <code>// Dans php.ini en production<br>
-                        display_errors = Off<br>
-                        log_errors = On<br>
-                        expose_php = Off<br>
-                        allow_url_fopen = Off<br>
-                        allow_url_include = Off<br>
-                        session.cookie_httponly = 1<br>
-                        session.cookie_secure = 1</code>
-                    </div>
+                <!-- Contenu Tab 2 : Content Security Policy -->
+                <div class="code-tab-content">
+                    <h4>🔒 Content Security Policy (CSP)</h4>
+                    <p><strong>CSP :</strong> Contrôler quelles ressources le navigateur peut charger</p>
+                    <pre class="line-numbers"><code class="language-php">// ═══════════════════════════════════════════════════════════
+// CONTENT SECURITY POLICY (CSP)
+// Définit quelles ressources le navigateur peut charger
+// Protection ultime contre XSS et injection de code
+// ═══════════════════════════════════════════════════════════
+
+header("Content-Security-Policy:
+    default-src 'self';
+    script-src 'self' 'unsafe-inline';
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' data: https:;
+    connect-src 'self';
+    font-src 'self'
+");
+
+// 📖 DÉCOMPOSITION DE LA POLITIQUE :
+
+// default-src 'self' :
+//   → Par défaut, autoriser SEULEMENT les ressources de notre domaine
+
+// script-src 'self' 'unsafe-inline' :
+//   → Scripts JS : notre domaine + inline autorisé
+//   → 'unsafe-inline' permet <script>code</script> (à éviter en prod si possible)
+
+// style-src 'self' 'unsafe-inline' :
+//   → CSS : notre domaine + styles inline autorisés
+
+// img-src 'self' data: https: :
+//   → Images : notre domaine + data URIs + n'importe quelle URL HTTPS
+
+// connect-src 'self' :
+//   → Connexions AJAX/fetch : seulement vers notre domaine
+
+// font-src 'self' :
+//   → Polices : seulement de notre domaine
+
+// 🛡️ IMPACT :
+// - Bloque automatiquement tout script XSS externe
+// - Empêche le chargement de ressources malveillantes
+// - Le navigateur refuse d'exécuter ce qui viole la politique
+
+// 💡 CONSEIL : Commencer avec une CSP en mode "report-only" pour tester
+// header("Content-Security-Policy-Report-Only: ...");</code></pre>
                 </div>
 
-                <div class="security-card security-vulnerability">
-                    <div class="security-icon">⚠️</div>
-                    <h3 style="color: #f59e0b;">Permissions fichiers</h3>
-                    <p><strong>Système :</strong> Droits d'accès minimaux</p>
-                    <br>
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">
-                        <code># Permissions recommandées<br>
-                        # Fichiers PHP : 644<br>
-                        chmod 644 *.php<br><br>
-                        # Dossiers : 755<br>
-                        chmod 755 /var/www/<br><br>
-                        # Config sensible : 600<br>
-                        chmod 600 config.php<br><br>
-                        # Uploads : 755 (pas 777 !)<br>
-                        chmod 755 uploads/</code>
-                    </div>
+                <!-- Contenu Tab 3 : Configuration PHP -->
+                <div class="code-tab-content">
+                    <h4>⚡ Configuration PHP</h4>
+                    <p><strong>Serveur :</strong> Durcir la configuration php.ini en production</p>
+                    <pre class="line-numbers"><code class="language-ini"># Dans php.ini en production
+
+# Désactiver l'affichage des erreurs aux utilisateurs
+display_errors = Off
+
+# Activer le logging des erreurs dans un fichier
+log_errors = On
+
+# Masquer la version PHP dans les headers HTTP
+expose_php = Off
+
+# Désactiver l'ouverture de fichiers distants
+allow_url_fopen = Off
+allow_url_include = Off
+
+# Sécuriser les cookies de session
+session.cookie_httponly = 1
+session.cookie_secure = 1
+
+# Limiter la durée de vie des sessions (30 minutes)
+session.gc_maxlifetime = 1800
+
+# Limiter la taille des uploads
+upload_max_filesize = 5M
+post_max_size = 8M</code></pre>
+                </div>
+
+                <!-- Contenu Tab 4 : Permissions fichiers -->
+                <div class="code-tab-content">
+                    <h4>⚠️ Permissions fichiers</h4>
+                    <p><strong>Système :</strong> Appliquer les droits d'accès minimaux (principe du moindre privilège)</p>
+                    <pre class="line-numbers"><code class="language-bash"># Permissions recommandées sur serveur Linux
+
+# Fichiers PHP : 644 (lecture pour tous, écriture propriétaire uniquement)
+chmod 644 *.php
+
+# Dossiers : 755 (exécution nécessaire pour naviguer)
+chmod 755 /var/www/
+
+# Fichiers de configuration sensibles : 600 (propriétaire uniquement)
+chmod 600 config.php
+chmod 600 .env
+
+# Dossier d'uploads : 755 (PAS 777 qui serait dangereux !)
+chmod 755 uploads/
+
+# Logs : 640 (lecture groupe web, écriture propriétaire)
+chmod 640 /var/log/app.log
+
+# ⚠️ JAMAIS : chmod 777 (accès total = danger !)</code></pre>
                 </div>
             </div>
 
@@ -1202,29 +1717,257 @@
 
             <h3>🎯 Points clés à retenir</h3>
 
-            <div class="security-cards">
-                <div class="security-card security-error">
-                    <div class="security-icon">⚡</div>
-                    <h3 style="color: #ef4444;">Gestion d'erreurs</h3>
-                    <p>Try-catch systématique, logging sécurisé, messages utilisateur simples</p>
+            <!-- SYSTÈME DE TABS : RÉCAPITULATIF DES CONCEPTS ESSENTIELS -->
+            <div class="code-tabs-container" id="summaryTabs">
+                <!-- En-têtes des onglets -->
+                <div class="code-tabs">
+                    <button class="code-tab active" onclick="switchTab('summaryTabs', 0)">
+                        ⚡ Gestion d'erreurs
+                    </button>
+                    <button class="code-tab" onclick="switchTab('summaryTabs', 1)">
+                        ⚠️ Top 3 vulnérabilités
+                    </button>
+                    <button class="code-tab" onclick="switchTab('summaryTabs', 2)">
+                        🛡️ Validation données
+                    </button>
+                    <button class="code-tab" onclick="switchTab('summaryTabs', 3)">
+                        🔒 Authentification
+                    </button>
                 </div>
 
-                <div class="security-card security-vulnerability">
-                    <div class="security-icon">⚠️</div>
-                    <h3 style="color: #f59e0b;">Top 3 vulnérabilités</h3>
-                    <p>Injection SQL, XSS, CSRF - Maîtriser les protections contre ces failles</p>
+                <!-- TAB 1 : Gestion d'erreurs -->
+                <div class="code-tab-content active">
+                    <h4>⚡ Gestion d'erreurs - Récapitulatif</h4>
+                    <p>Les erreurs bien gérées protègent votre application et préservent l'expérience utilisateur.</p>
+
+                    <pre class="line-numbers"><code class="language-php">
+// ═══════════════════════════════════════════════════════════
+// CONFIGURATION PRODUCTION (php.ini)
+// ═══════════════════════════════════════════════════════════
+
+// ✅ NE JAMAIS afficher les erreurs aux utilisateurs
+display_errors = Off
+
+// ✅ TOUJOURS logger les erreurs pour le debug
+log_errors = On
+error_log = /var/log/php_errors.log
+
+// ═══════════════════════════════════════════════════════════
+// STRUCTURE DE GESTION
+// ═══════════════════════════════════════════════════════════
+
+try {
+    // 1️⃣ Code potentiellement risqué
+    $result = executeOperation();
+
+} catch (SpecificException $e) {
+    // 2️⃣ Logger les détails techniques (fichiers seulement)
+    error_log("Erreur technique: " . $e->getMessage());
+
+    // 3️⃣ Message simple pour l'utilisateur
+    echo "Une erreur est survenue. Veuillez réessayer.";
+}
+
+// 💡 RÈGLE D'OR : Séparer complètement les messages techniques et utilisateur !
+</code></pre>
+
+                    <p><strong>Points essentiels :</strong></p>
+                    <ul style="color: #ccc; margin-top: 15px; line-height: 1.8;">
+                        <li>✅ Try-catch systématique sur les opérations critiques</li>
+                        <li>✅ Logging sécurisé (jamais de données sensibles)</li>
+                        <li>✅ Messages utilisateur génériques et simples</li>
+                        <li>✅ Exceptions personnalisées pour typer les erreurs</li>
+                    </ul>
                 </div>
 
-                <div class="security-card security-protection">
-                    <div class="security-icon">🛡️</div>
-                    <h3 style="color: #3b82f6;">Validation données</h3>
-                    <p>Ne jamais faire confiance aux entrées utilisateur, valider côté serveur</p>
+                <!-- TAB 2 : Top 3 vulnérabilités -->
+                <div class="code-tab-content">
+                    <h4>⚠️ Top 3 vulnérabilités - Protection essentielle</h4>
+                    <p>Ces trois failles représentent la majorité des attaques web. Maîtrisez-les absolument !</p>
+
+                    <pre class="line-numbers"><code class="language-php">
+// ═══════════════════════════════════════════════════════════
+// 1️⃣ INJECTION SQL - TOUJOURS utiliser les requêtes préparées
+// ═══════════════════════════════════════════════════════════
+
+// ❌ JAMAIS CELA :
+$sql = "SELECT * FROM users WHERE id = " . $_GET['id'];
+
+// ✅ TOUJOURS CELA :
+$stmt = $pdo->prepare("SELECT * FROM users WHERE id = :id");
+$stmt->execute([':id' => $_GET['id']]);
+
+// ═══════════════════════════════════════════════════════════
+// 2️⃣ XSS (Cross-Site Scripting) - TOUJOURS échapper
+// ═══════════════════════════════════════════════════════════
+
+// ❌ JAMAIS CELA :
+echo "<div>" . $_POST['nom'] . "</div>";
+
+// ✅ TOUJOURS CELA :
+echo "<div>" . htmlspecialchars($_POST['nom'], ENT_QUOTES, 'UTF-8') . "</div>";
+
+// ═══════════════════════════════════════════════════════════
+// 3️⃣ CSRF (Cross-Site Request Forgery) - TOUJOURS vérifier token
+// ═══════════════════════════════════════════════════════════
+
+// ✅ Dans le formulaire :
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+// <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+
+// ✅ À la soumission :
+if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+    die('Token CSRF invalide');
+}
+</code></pre>
+
+                    <p><strong>Mémo anti-vulnérabilités :</strong></p>
+                    <ul style="color: #ccc; margin-top: 15px; line-height: 1.8;">
+                        <li>🚨 <strong>SQL</strong> : Requêtes préparées uniquement (PDO ou MySQLi)</li>
+                        <li>🚨 <strong>XSS</strong> : htmlspecialchars() sur TOUTES les sorties</li>
+                        <li>🚨 <strong>CSRF</strong> : Token aléatoire dans chaque formulaire</li>
+                    </ul>
                 </div>
 
-                <div class="security-card security-auth">
-                    <div class="security-icon">🔒</div>
-                    <h3 style="color: #10b981;">Authentification</h3>
-                    <p>password_hash(), sessions sécurisées, contrôle des droits d'accès</p>
+                <!-- TAB 3 : Validation données -->
+                <div class="code-tab-content">
+                    <h4>🛡️ Validation données - Ne faites confiance à personne</h4>
+                    <p>Toutes les entrées utilisateur doivent être validées côté serveur, sans exception.</p>
+
+                    <pre class="line-numbers"><code class="language-php">
+// ═══════════════════════════════════════════════════════════
+// PRINCIPE FONDAMENTAL : VALIDATION SERVEUR OBLIGATOIRE
+// ═══════════════════════════════════════════════════════════
+
+// 💡 La validation JavaScript côté client peut être désactivée !
+// 🛡️ TOUJOURS valider sur le serveur, même si validation côté client
+
+// ═══════════════════════════════════════════════════════════
+// EXEMPLES DE VALIDATION
+// ═══════════════════════════════════════════════════════════
+
+// 1️⃣ Validation d'email
+$email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+if (!$email) {
+    throw new Exception("Email invalide");
+}
+
+// 2️⃣ Validation d'entier avec limites
+$age = filter_var($_POST['age'], FILTER_VALIDATE_INT, [
+    'options' => ['min_range' => 18, 'max_range' => 120]
+]);
+
+// 3️⃣ Validation format avec regex
+if (!preg_match('/^[a-zA-Z0-9_]{3,20}$/', $_POST['username'])) {
+    throw new Exception("Nom d'utilisateur invalide");
+}
+
+// 4️⃣ Whitelist : autoriser uniquement certaines valeurs
+$allowedColors = ['rouge', 'bleu', 'vert'];
+if (!in_array($_POST['color'], $allowedColors, true)) {
+    throw new Exception("Couleur non autorisée");
+}
+
+// ═══════════════════════════════════════════════════════════
+// ÉCHAPPEMENT SELON LE CONTEXTE
+// ═══════════════════════════════════════════════════════════
+
+// Pour HTML :
+htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+
+// Pour URL :
+urlencode($data);
+
+// Pour JavaScript :
+json_encode($data, JSON_HEX_TAG | JSON_HEX_AMP);
+</code></pre>
+
+                    <p><strong>Checklist validation :</strong></p>
+                    <ul style="color: #ccc; margin-top: 15px; line-height: 1.8;">
+                        <li>✅ Valider TOUJOURS côté serveur (jamais seulement client)</li>
+                        <li>✅ Utiliser filter_var() pour types standards</li>
+                        <li>✅ Préférer whitelist (autoriser) plutôt que blacklist (interdire)</li>
+                        <li>✅ Échapper selon le contexte (HTML ≠ URL ≠ JavaScript)</li>
+                    </ul>
+                </div>
+
+                <!-- TAB 4 : Authentification -->
+                <div class="code-tab-content">
+                    <h4>🔒 Authentification - Sécuriser l'accès utilisateur</h4>
+                    <p>L'authentification est la première ligne de défense. Un seul point faible suffit à compromettre tout le système.</p>
+
+                    <pre class="line-numbers"><code class="language-php">
+// ═══════════════════════════════════════════════════════════
+// 1️⃣ HACHAGE SÉCURISÉ DES MOTS DE PASSE
+// ═══════════════════════════════════════════════════════════
+
+// ✅ À l'inscription :
+$password_hashed = password_hash($_POST['password'], PASSWORD_ARGON2ID);
+// Stocker $password_hashed dans la BDD (JAMAIS le mot de passe en clair !)
+
+// ✅ À la connexion :
+if (password_verify($_POST['password'], $user['password_hashed'])) {
+    // Mot de passe correct
+    $_SESSION['user_id'] = $user['id'];
+}
+
+// ═══════════════════════════════════════════════════════════
+// 2️⃣ CONFIGURATION SESSIONS SÉCURISÉES
+// ═══════════════════════════════════════════════════════════
+
+// ✅ Configuration avant session_start()
+ini_set('session.cookie_httponly', 1);  // Protège contre XSS
+ini_set('session.cookie_secure', 1);    // HTTPS uniquement
+ini_set('session.use_strict_mode', 1);  // Refuse sessions non initialisées
+
+session_start();
+
+// ✅ Régénérer l'ID après connexion (protection fixation de session)
+session_regenerate_id(true);
+
+// ═══════════════════════════════════════════════════════════
+// 3️⃣ CONTRÔLE DES DROITS D'ACCÈS
+// ═══════════════════════════════════════════════════════════
+
+function requireAuth() {
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: login.php');
+        exit;
+    }
+}
+
+function requireRole($role) {
+    requireAuth();
+    if ($_SESSION['user_role'] !== $role) {
+        die('Accès refusé');
+    }
+}
+
+// 💡 Utilisation :
+requireRole('admin');  // Sur page admin
+
+// ═══════════════════════════════════════════════════════════
+// 4️⃣ PROTECTION FORCE BRUTE
+// ═══════════════════════════════════════════════════════════
+
+// ✅ Limiter les tentatives de connexion
+$_SESSION['login_attempts'] = ($_SESSION['login_attempts'] ?? 0) + 1;
+
+if ($_SESSION['login_attempts'] > 5) {
+    $wait_time = pow(2, $_SESSION['login_attempts'] - 5) * 60;
+    die("Trop de tentatives. Réessayez dans " . $wait_time . " secondes.");
+}
+</code></pre>
+
+                    <p><strong>Fondamentaux authentification :</strong></p>
+                    <ul style="color: #ccc; margin-top: 15px; line-height: 1.8;">
+                        <li>✅ password_hash() et password_verify() uniquement</li>
+                        <li>✅ Sessions sécurisées (httponly, secure, regenerate_id)</li>
+                        <li>✅ Contrôle des droits sur CHAQUE page protégée</li>
+                        <li>✅ Protection contre force brute (limitation tentatives)</li>
+                    </ul>
                 </div>
             </div>
 
@@ -1290,6 +2033,13 @@
             </div>
         </footer>
     </main>
+
+    <!-- Prism.js JavaScript pour la coloration syntaxique -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-ini.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 
     <!-- JavaScript -->
     <script src="script.js"></script>
